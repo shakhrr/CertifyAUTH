@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#8b847f</color>
+    <color name="colorAccent">#18C785</color>
+    <color name="colorPrimaryLight">#B2DFDB</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light">#FAFAFA</color>
+    <color name="orange">#ff9a44</color>
+    <color name="orange_light">#60ff9a44</color>
+    <color name="gray">#8b847f</color>
+    <color name="gray_light">#eaeae1</color>
+    <color name="menu_bg">#D0D3D4</color>
+    <color name="gray_two">#D2D2D2</color>
+    <color name="read">#ff3333</color>
+    <color name="bg">#FDFEFE</color>
+    <color name="grey3">#616161</color>
+    <color name="blue">#236bdc</color>
+    <color name="green">#70ad47</color>
+    <color name="orange_ff">#FFff9a44</color>
+    <color name="readOfX">#ffff3333</color>
+    <color name="read_dork">#A93226</color>
+    <color name="btn_deny">#0B193C</color>
+    <color name="btn_approve">#18C785</color>
+    <color name="grayOfX">#ff8b847f</color>
+</resources>

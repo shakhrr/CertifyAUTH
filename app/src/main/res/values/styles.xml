@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="AppTheme" parent="AppTheme.Base" />
+    <!-- Customize your theme here. -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
+        <item name="android:listPreferredItemHeightSmall">38dp</item>
+        <item name="android:panelBackground">@color/black</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Custom.Widget.SwitchCompat" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/blue
+        </item>  <!--textColor on activated state -->
+    </style>
+
+</resources>

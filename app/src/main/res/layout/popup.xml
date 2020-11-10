@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin10"
+    android:background="@drawable/wight_rectangle"
+    android:gravity="right"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/tr_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin05"
+            android:tag="2">
+
+            <TextView
+                android:id="@+id/tv_show_by_name"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
+                android:text="@string/about"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:id="@+id/image_show_by_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin20"
+                android:contentDescription="TODO" android:visibility="gone" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:padding="@dimen/margin05"
+            android:tag="1">
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
+                android:text="@string/settings"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:id="@+id/image_arrival"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin20"
+                android:contentDescription="TODO" android:visibility="gone" />
+        </TableRow>
+
+
+        <TableRow
+            android:id="@+id/tr_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin05"
+            android:tag="3">
+
+            <TextView
+                android:id="@+id/tv_show_by_hidden"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
+                android:text="@string/help"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:id="@+id/image_show_by_hidden"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin20"
+                android:contentDescription="TODO" android:visibility="gone" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>

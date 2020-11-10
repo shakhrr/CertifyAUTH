@@ -339,7 +339,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                 break;
                         }
                     } catch (Exception e) {
-                       // Logger.error(TAG + "tvYes - > onClick(View v)", e.getMessage());
+                        Logger.error(TAG + "tvYes - > onClick(View v)", e.getMessage());
                     }
                 }
             });

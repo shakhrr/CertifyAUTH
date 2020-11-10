@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   - FreeOTP
+   -
+   - Authors: Nathaniel McCallum <npmccallum@redhat.com>
+   -
+   - Copyright (C) 2013  Nathaniel McCallum, Red Hat
+   -
+   - Licensed under the Apache License, Version 2.0 (the "License");
+   - you may not use this file except in compliance with the License.
+   - You may obtain a copy of the License at
+   -
+   -     http://www.apache.org/licenses/LICENSE-2.0
+   -
+   - Unless required by applicable law or agreed to in writing, software
+   - distributed under the License is distributed on an "AS IS" BASIS,
+   - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   - See the License for the specific language governing permissions and
+   - limitations under the License.
+   -->
+
+<com.certifyglobal.authenticator.TokenLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:freeotp="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/token">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="@dimen/margin08"
+        android:layout_marginTop="@dimen/margin10"
+        android:layout_marginBottom="@dimen/margin05"
+        android:contentDescription="TODO"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_defalt_icon" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_total_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="32dp">
+
+
+        <TextView
+            android:id="@+id/issuer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin16"
+            android:ellipsize="end"
+            android:gravity="left|center"
+            android:maxLines="1"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin16"
+            android:ellipsize="end"
+            android:gravity="left|center"
+            android:maxLines="1"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/label_user_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left|center"
+            android:maxLines="1"
+            android:text="eb40924b-1d13-4807-9a76-30eb7ffa7eba"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin08"
+            android:layout_marginRight="@dimen/margin20"
+            android:paddingLeft="2dp"
+            android:text="-----"
+            android:textSize="38sp"
+            android:visibility="visible"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="32dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:contentDescription="TODO" android:src="@drawable/ic_action_down" />
+
+        <RelativeLayout
+            android:id="@+id/rl_code_progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/menu"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="@dimen/margin12"
+            android:visibility="visible">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/draw_circle"
+                android:indeterminate="false"
+                android:max="1000"
+                android:progress="1000"
+                android:progressDrawable="@drawable/circular_progre" />
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="1" />
+        </RelativeLayout>
+
+        <com.certifyglobal.authenticator.ProgressCircle
+            android:id="@+id/progressInner"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/menu"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/margin16"
+            android:padding="10dp"
+            android:visibility="gone"
+            freeotp:hollow="false"
+            freeotp:max="1000" />
+
+        <com.certifyglobal.authenticator.ProgressCircle
+            android:id="@+id/progressOuter"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/menu"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/margin16"
+            android:padding="8dp"
+            android:visibility="gone"
+            freeotp:hollow="true"
+            freeotp:max="1000" />
+    </RelativeLayout>
+</com.certifyglobal.authenticator.TokenLayout>

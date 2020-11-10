@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin10"
+        android:text="@string/why_are_you_denying_this_request" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".8dp"
+        android:background="@color/gray" />
+
+    <TextView  android:id="@+id/tv_fraudulent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin10"
+        android:text="@string/fraudulent"
+        android:textSize="@dimen/font_size4"
+        android:textColor="@color/read" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".8dp"
+        android:background="@color/gray" />
+
+    <TextView  android:id="@+id/tv_mistake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin10"
+        android:text="@string/mistake"
+        android:textSize="@dimen/font_size4"
+        android:textColor="@color/blue" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".8dp"
+        android:background="@color/gray" />
+
+    <TextView  android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin10"
+        android:text="@string/cancel"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/font_size4"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

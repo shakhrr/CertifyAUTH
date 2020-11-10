@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "479636139058",
+    "firebase_url": "https://certify-authenticator.firebaseio.com",
+    "project_id": "certify-authenticator",
+    "storage_bucket": "certify-authenticator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479636139058:android:974fe9e4f6cb5fb8",
+        "android_client_info": {
+          "package_name": "com.certifyglobal.authenticator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479636139058-agerarefb5f74qukhhsh538rq73o55p1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.certifyglobal.authenticator",
+            "certificate_hash": "d1f439a02e52e32393fab3a38f55a6b1771cdd12"
+          }
+        },
+        {
+          "client_id": "479636139058-2896r1bl1mp3a84k0id3ghbf8slrvrtm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.certifyglobal.authenticator",
+            "certificate_hash": "2ab49da2631f16a2253629d6865fa7ca9d634a67"
+          }
+        },
+        {
+          "client_id": "479636139058-20u18cmf9mfo6e2ajjbnjlrr9is48lth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKw4WN8qZXjVq3UQjVYqMo0erPctk6zwI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479636139058-20u18cmf9mfo6e2ajjbnjlrr9is48lth.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "479636139058-hiaktocvu1si0su6rrrgvkhdch5ms0qd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.certifyglobal.Authenticator"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

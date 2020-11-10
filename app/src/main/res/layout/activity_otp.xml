@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".OtpActivity">
+
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/tab_single" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin16"
+        android:gravity="center"
+        android:padding="@dimen/margin30"
+        android:text="@string/verification_message"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/font_size2" />
+
+    <EditText
+        android:id="@+id/editTextOne"
+        android:layout_width="200dp"
+        android:layout_height="@dimen/dm_42sp"
+        android:layout_gravity="center"
+        android:background="@drawable/edit_text_style"
+        android:focusable="true"
+        android:gravity="center"
+        android:inputType="numberPassword"
+        android:maxLength="6"
+        android:nextFocusRight="@+id/editTextTwo"
+        android:textSize="@dimen/font_size6">
+
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/layout_otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+
+        <EditText
+            android:id="@+id/editTextTwo"
+            android:layout_width="@dimen/dm_40sp"
+            android:layout_height="@dimen/dm_42sp"
+            android:layout_marginRight="@dimen/margin10"
+            android:background="@drawable/edit_text_style"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textSize="@dimen/font_size6" />
+
+        <EditText
+            android:id="@+id/editTextThree"
+            android:layout_width="@dimen/dm_40sp"
+            android:layout_height="@dimen/dm_42sp"
+            android:layout_marginRight="@dimen/margin10"
+            android:background="@drawable/edit_text_style"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textSize="@dimen/font_size6" />
+
+        <EditText
+            android:id="@+id/editTextFour"
+            android:layout_width="@dimen/dm_40sp"
+            android:layout_height="@dimen/dm_42sp"
+            android:layout_marginRight="@dimen/margin10"
+            android:background="@drawable/edit_text_style"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textSize="@dimen/font_size6" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewNext"
+        android:layout_width="200dp"
+        android:layout_height="@dimen/dm_42sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin30"
+        android:background="@drawable/edit_text_bule"
+        android:gravity="center"
+        android:textColor="@color/white" />
+</LinearLayout>

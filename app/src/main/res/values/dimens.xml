@@ -1,0 +1,46 @@
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="font_size0">8sp</dimen>
+    <dimen name="font_size1">10sp</dimen>
+    <dimen name="font_size2">12sp</dimen>
+    <dimen name="font_size3">14sp</dimen>
+    <dimen name="font_size4">16sp</dimen>
+    <dimen name="font_size6">18sp</dimen>
+    <dimen name="font_size7">20sp</dimen>
+    <dimen name="font_size8">22sp</dimen>
+    <dimen name="font_size9">30sp</dimen>
+    <dimen name="margin01">1dp</dimen>
+    <dimen name="margin02">2dp</dimen>
+    <dimen name="margin03">3dp</dimen>
+    <dimen name="margin04">4dp</dimen>
+    <dimen name="margin05">5dp</dimen>
+    <dimen name="margin06">6dp</dimen>
+    <dimen name="margin08">8dp</dimen>
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="margin12">12dp</dimen>
+    <dimen name="margin16">16dp</dimen>
+    <dimen name="margin20">20dp</dimen>
+    <dimen name="margin30">30dp</dimen>
+    <dimen name="margin40">40dp</dimen>
+    <dimen name="margin80">80dp</dimen>
+    <dimen name="margin90">90dp</dimen>
+    <dimen name="margin70">70dp</dimen>
+    <dimen name="margin60">60dp</dimen>
+    <dimen name="margin150">150dp</dimen>
+
+    <dimen name="dm_42sp">42dp</dimen>
+    <dimen name="dm_40sp">40dp</dimen>
+    <dimen name="app_bar_top_padding">0dp</dimen>
+    <dimen name="nav_drawer_width">240dp</dimen>
+    <dimen name="size_24">24dip</dimen>
+    <dimen name="table_width">150dp</dimen>
+    <dimen name="table_height">25dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+</resources>

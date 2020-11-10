@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".ImageActivity">
+
+    <ImageView
+        android:id="@+id/img_test"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin10"
+        android:drawableTop="@drawable/ic_approve"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size9"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/include_progress"
+        layout="@layout/prograss_dialog"
+        android:visibility="visible" />
+</LinearLayout>

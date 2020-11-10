@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "contract": {
+    "customer": "certify_global",
+    "expiration": {
+      "year": 2020,
+      "month": 12,
+      "day": 31
+    },
+    "products": [
+      "iface"
+    ],
+    "idkit": {
+      "max_client_connections": 0,
+      "database_size": 0
+    },
+    "hwids": [
+      "AQxEaxbdh4l5dFID"
+    ],
+    "signature": "B7RwYgSjuWCoW9sbm5U+yCa6IYbdzQyCs/m9Yla5TdlhqLsKixYNokgCgGxv3QAhxoy5tSq6c/QjzEX03ssE0J7VqZrwok+3AI47b7YLoeKxvw2/xDC2rd6rfH21CHTvF3lq0LRLi5WBKIHZw0uhRns7vRerbrQdbvd3ZmM5vaM="
+  }
+}

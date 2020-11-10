@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="85dp"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_authx_logo_green" />
+
+    <ImageView
+        android:id="@+id/image_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="TODO"
+        android:paddingTop="@dimen/margin10"
+        android:paddingRight="@dimen/margin10"
+        android:paddingBottom="@dimen/margin10"
+        android:src="@drawable/ic_action_menu_green" />
+
+    <ImageView
+        android:id="@+id/image_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/image_menu"
+        android:contentDescription="TODO"
+        android:padding="@dimen/margin10"
+        android:src="@drawable/ic_action_add_green" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/image_logo"
+        android:background="@color/gray" />
+</RelativeLayout>

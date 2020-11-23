@@ -216,6 +216,8 @@ public class Utils {
             obj.put("correlation_id", correlationId);
 
             new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, EndPoints.pushAuthenticationStatus)).execute();
+            Logger.debug("push Log",obj.toString());
+            Logger.debug("push Loguuid ","deviceuuid   "+Utils.readFromPreferences(context, PreferencesKeys.deviceUUid, "")+"request ID  "+ requestId+ "private key:  "+ Utils.readFromPreferences(context, PreferencesKeys.privateKey, "")+"public key:   "+Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
 
         } catch (Exception e) {
             Logger.error(LOG + "PushAuthenticationStatus(String userEmail, boolean isAuthenticated, JSONObjectCallback callback, String requestId)", e.getMessage());

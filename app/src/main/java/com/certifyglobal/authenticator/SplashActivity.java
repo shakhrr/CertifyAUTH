@@ -1,12 +1,15 @@
 package com.certifyglobal.authenticator;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -39,17 +42,27 @@ public class SplashActivity extends AppCompatActivity {
     private String TAG = "SplashActivity - ";
     Intent intent;
     private static NotificationChannel mChannel;
+    Uri data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
 
+            Intent intent = getIntent();
+            if (intent.getData() != null) {
+                data = intent.getData();
+                Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
+                intentURL.putExtra("Url", data);
+                startActivity(intent);
+                Logger.debug("deep link", data.toString());
+            }
+
             AppCenter.start(getApplication(), "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
                     Analytics.class, Crashes.class);
 
             setContentView(R.layout.activity_splash);
-         //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
+            //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
             //Device checking root or not
 
             new AsyncGetCheckRoot(null, "").execute();
@@ -60,6 +73,7 @@ public class SplashActivity extends AppCompatActivity {
             if (Utils.readFromPreferences(this, PreferencesKeys.publicKey, "").isEmpty())
                 RSAKeypair.getRSAPublic(this);
             Intent intent_o = getIntent();
+
             // push notification. App is close that time it will call
             if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null) {
                 Intent notificationIntent = new Intent(this, PushNotificationActivity.class);
@@ -85,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
                 notificationIntent.putExtra("machineName", intent_o.getStringExtra("MachineName") == null ? "" : intent_o.getStringExtra("MachineName"));
                 notificationIntent.putExtra("ip", intent_o.getStringExtra("IP") == null ? "" : intent_o.getStringExtra("IP"));
                 notificationIntent.putExtra("timeOut", intent_o.getStringExtra("TimeOut") == null ? "" : intent_o.getStringExtra("TimeOut"));
-                notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId")== null ? "" : intent_o.getStringExtra("CorrelationId"));
+                notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId") == null ? "" : intent_o.getStringExtra("CorrelationId"));
                 startActivity(notificationIntent);
             } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false)) {
                 startActivity(new Intent(this, UserActivity.class));

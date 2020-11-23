@@ -1,9 +1,12 @@
 package com.certifyglobal.authenticator;
 
+import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -96,4 +99,5 @@ public class Settings extends MainActivity {
     protected void onResume() {
         super.onResume();
     }
+
 }

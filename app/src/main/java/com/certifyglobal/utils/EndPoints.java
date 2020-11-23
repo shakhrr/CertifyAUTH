@@ -31,7 +31,7 @@ import com.certifyglobal.authenticator.Settings;
 //        https://admin.certifyauth.com/ep - Web API
 public class EndPoints {
 
-    public static final Mode deployment = Mode.Local;
+    public static final Mode deployment = Mode.Prod;
     public static String prod_url = "https://api.authx.com/";//"https://apidemo.certifyauth.com/mobile/";
     public static String dev_url = "https://api.authx.com/";
 
@@ -48,7 +48,7 @@ public class EndPoints {
     public static final String deactivateUser = domainUrl + "DeactivateUser";
     // public static final String pushAuthenticationStatus = domainUrl + "PushAuthenticationStatus";
     public static final String pushAuthenticationStatus = domainUrl + "MobileAuthStatus";
-    public static String getOsDetails = GetServerURL()+ "GetOSDetails";
+    public static String getOsDetails = GetServerURL()+ "Mobile/GetOSDetails";
 
     public static final String addMobileApp = domainUrl + "AddMobileApp";
     public static final String deactivateThird = domainUrl + "DeactivateMobileApp";
@@ -57,8 +57,6 @@ public class EndPoints {
     public static String payLoadNotification = "GetPayLoadNotification";
     public static String faceSetting = domainUrl+"getBioSettingsForMobile";
     public static final String companyImageUpdate = domainUrl + "getCompanyUpdates";
-
-
     public static final String LICENSE_FILE = "res/raw/iengine.lic"; public enum Mode {Prod, Local}
 
 

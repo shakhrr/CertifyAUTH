@@ -296,7 +296,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     if (dialog != null) dialog.show();
                                     Utils.PushAuthenticationStatus(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
                                     //  push_layout.setVisibility(View.GONE);
-                                    finish();
+                                   // finish();
                                     break;
                                 }catch (Exception e){
                                     Logger.error(TAG,e.getMessage());
@@ -407,7 +407,9 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
     @Override
     public void onJSONObjectListener(JSONObject report, String status, JSONObject req) {
         try {
-            if (dialog != null) dialog.dismiss();
+
+            Logger.debug("push api response", report.toString());
+
             if (report == null) {
                 setResultUI(getResources().getString(R.string.denied), getResources().getColor(R.color.orange), R.drawable.ic_deny);
                 return;
@@ -431,6 +433,8 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
 
         } catch (Exception e) {
             Logger.error(TAG, e.getMessage());
+            if (dialog != null) dialog.dismiss();
+
         }
     }
 
@@ -506,7 +510,8 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  //  finish();
+                    finish();
+                    if (dialog != null) dialog.dismiss();
                     startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
                 }
             }, 1000);

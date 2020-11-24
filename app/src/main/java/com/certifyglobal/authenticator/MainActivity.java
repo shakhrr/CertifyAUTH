@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
             imageMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mPopupMenu.show();
+                  //  mPopupMenu.show();
+                    startActivity(new Intent(MainActivity.this, Settings.class));
                 }
             });
             mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

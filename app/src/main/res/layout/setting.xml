@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/gray_light"
+    >
 
     <include
         android:id="@+id/app_bar"
@@ -113,10 +115,11 @@
             <LinearLayout
                 android:id="@+id/ll_security_checkup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/margin05">
+                android:padding="@dimen/margin05"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/dis"
@@ -141,13 +144,77 @@
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
+            <TextView
+                android:id="@+id/help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/gray_light"
+                android:gravity="start"
+                android:paddingStart="@dimen/margin20"
+                android:paddingTop="25dp"
+                android:paddingBottom="@dimen/margin03"
+                android:text="@string/tv_help"
+                android:textColor="#a4a5a9"
+                android:textSize="@dimen/font_size3"
+                tools:ignore="RtlSymmetry" />
+            <LinearLayout
+                android:id="@+id/ll_passcodes"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin05"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/tv_passcodes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingStart="@dimen/margin16"
+                    android:text="@string/about_passcodes"
+                    android:textColor="#e41e1111"
+                    android:textSize="@dimen/font_size4"
+                    tools:ignore="RtlSymmetry" />
+
+
+                <ImageView
+                    android:id="@+id/iv_back2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="150dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_right"
+                    tools:ignore="ContentDescription" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/applock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/gray_light"
+                android:gravity="start"
+                android:paddingStart="@dimen/margin20"
+                android:paddingTop="25dp"
+                android:paddingBottom="@dimen/margin03"
+                android:text="@string/security"
+                android:textColor="#a4a5a9"
+                android:textSize="@dimen/font_size3"
+                tools:ignore="RtlSymmetry" />
             <LinearLayout
                 android:id="@+id/ll_applock"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/margin05">
+                android:padding="@dimen/margin05"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/tv_app_lock"
@@ -436,23 +503,21 @@
                 android:id="@+id/tv_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:paddingStart="@dimen/margin20"
-                android:paddingTop="10dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size4"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="RtlSymmetry"/>
 
             <TextView
                 android:id="@+id/tv_build"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin05"
-                android:gravity="start"
-                android:paddingStart="@dimen/margin20"
+                android:layout_marginTop="@dimen/margin10"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size4"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="RtlSymmetry"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

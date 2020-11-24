@@ -151,4 +151,7 @@
     <string name="date_time">Date and Time</string>
     <string name="system">System</string>
     <string name="app_lock">App Lock</string>
+    <string name="security">SECURITY</string>
+    <string name="tv_help">HELP</string>
+    <string name="about_passcodes">About Passcodes</string>
 </resources>

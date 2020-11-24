@@ -36,6 +36,7 @@ public class Settings extends MainActivity {
             LinearLayout llBioSign = findViewById(R.id.ll_bio_sign);
             LinearLayout llBle = findViewById(R.id.ll_ble);
             LinearLayout llSecurityCheckup = findViewById(R.id.ll_security_checkup);
+            LinearLayout llPasscodes = findViewById(R.id.ll_passcodes);
             LinearLayout llapplock = findViewById(R.id.ll_applock);
             LinearLayout llRecover = findViewById(R.id.ll_recover);
             swithc_menu_lock = findViewById(R.id.swithc_menu_lock);
@@ -70,6 +71,12 @@ public class Settings extends MainActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(Settings.this, SecurityCheckupActivity.class));
+                }
+            });
+            llPasscodes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Settings.this, Passcode.class));
                 }
             });
             swithc_menu_lock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

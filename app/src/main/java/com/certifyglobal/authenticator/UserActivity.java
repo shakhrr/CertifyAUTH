@@ -218,7 +218,8 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                 @Override
                 public void onClick(View view) {
                     try {
-                        mPopupMenu.show();
+                       // mPopupMenu.show();
+                        startActivity(new Intent(UserActivity.this, Settings.class));
                     } catch (Exception e) {
                         Logger.error(LAG + "imageMenu - setOnClickListener", e.getMessage());
                     }

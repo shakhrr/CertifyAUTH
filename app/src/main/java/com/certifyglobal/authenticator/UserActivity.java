@@ -29,8 +29,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -76,9 +74,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     private CountDownTimer countDownTimer;
     public static int timeOut = 0;
     private Executor executor;
-    private BiometricPrompt biometricPrompt;
-    private BiometricPrompt.PromptInfo promptInfo;
-
 
     @Override
     public void onJSONObjectListener(JSONObject report, String status,JSONObject req) {
@@ -181,9 +176,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 //            Bundle bundle = new Bundle();
 //            bundle.putString("Requestor", "postmethod");
 //            mFirebaseAnalytics.logEvent("auth", bundle);
-            if(Utils.readFromPreferences(UserActivity.this,PreferencesKeys.appLock,true)) {
-                biometricLogin();
-            }
             setContentView(R.layout.user_layout);
             Utils.saveToPreferences(UserActivity.this, PreferencesKeys.isLogin, true);
             mTokenPersistence = new TokenPersistence(this);
@@ -191,9 +183,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             imageMenu = findViewById(R.id.image_menu);
             llNotifications = findViewById(R.id.ll_notifications);
             tvCount = findViewById(R.id.tv_count_notification);
-
-
-
             llNotifications.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -468,47 +457,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
         } catch (Exception e) {
             Logger.error(LAG + "startCountDownTimer(long timeCountInMilliSeconds)", e.getMessage());
         }
-    }
-
-    private void biometricLogin() {
-        try {
-            executor = ContextCompat.getMainExecutor(this);
-            biometricPrompt = new BiometricPrompt(UserActivity.this,
-                    executor, new BiometricPrompt.AuthenticationCallback() {
-                @Override
-                public void onAuthenticationError(int errorCode,
-                                                  @NonNull CharSequence errString) {
-                    super.onAuthenticationError(errorCode, errString);
-                    finishAffinity();
-                }
-                @Override
-                public void onAuthenticationSucceeded(
-                        @NonNull BiometricPrompt.AuthenticationResult result) {
-                    super.onAuthenticationSucceeded(result);
-                }
-                @Override
-                public void onAuthenticationFailed() {
-                    super.onAuthenticationFailed();
-                    finishAffinity();
-                }
-            });
-
-            promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Biometric login for AuthX")
-                    .setSubtitle("Log in using your biometric credential")
-                    .setNegativeButtonText("")
-                    .setDeviceCredentialAllowed(true)
-                    .build();
-
-            // Prompt appears when user clicks "Log in".
-            // Consider integrating with the keystore to unlock cryptographic operations,
-            // if needed by your app.
-            biometricPrompt.authenticate(promptInfo);
-        }catch (Exception e){
-            Logger.error(LAG,e.getMessage());
-        }
-
-
     }
 
     @Override

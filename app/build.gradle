@@ -99,6 +99,7 @@ dependencies {
 
     testImplementation 'commons-logging:commons-logging:1.2'
     implementation 'androidx.biometric:biometric:1.0.1'
+//    implementation 'androidx.biometric:biometric:1.0.0-alpha02'
 
     //noinspection GradleCompatible
     // implementation 'org.bouncycastle:bcprov-jdk16:1.46'

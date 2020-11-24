@@ -123,6 +123,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                 notificationManager.cancelAll();
             //}
 
+
             if (intent.getStringExtra("companyName").trim().isEmpty())
                 tvComName.setVisibility(View.GONE);
             tvComName.setText(intent.getStringExtra("companyName"));
@@ -166,7 +167,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             String[] values = GuidUserId.split(":");
             userId = values[0];
             String oldId = values.length > 1 ? values[1] : "";
-
             this.runOnUiThread(new Runnable() {
                 public void run() {
                     mTokenPersistence = new TokenPersistence(PushNotificationActivity.this);
@@ -441,8 +441,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     private void faceSettingCall() {
@@ -512,7 +510,10 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                 public void run() {
                     finish();
                     if (dialog != null) dialog.dismiss();
-                    startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
+                    Intent  intent=new Intent(PushNotificationActivity.this,SplashActivity.class);
+                    intent.putExtra("push",true);
+                    startActivity(intent);
+                  //  startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
                 }
             }, 1000);
 

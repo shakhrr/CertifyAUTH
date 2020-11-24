@@ -8,7 +8,7 @@ import com.certifyglobal.authenticator.Settings;
 @SuppressWarnings("WeakerAccess")
 //dev Environment:
 //
-//        https://admindev.certifyauth.com/  - Portal
+//        https://admindev.authx.com/  - Portal
 //        https://apidev.certifyauth.com/  - Auth API
 //        https://admintest.certifyauth.com/ep - Web API
 //Test Environment:

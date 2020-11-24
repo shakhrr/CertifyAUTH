@@ -6,22 +6,23 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-
 import com.certifyglobal.database.DBAdapter;
 import com.certifyglobal.database.DBCompanyAdapter;
 import com.certifyglobal.database.DBIFaceAdapter;
-import com.certifyglobal.utils.Logger;
-import com.certifyglobal.utils.PreferencesKeys;
-import com.certifyglobal.utils.Utils;
 import com.crashlytics.android.Crashlytics;
 
+
+import java.util.concurrent.Executor;
 
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.internal.Util;
 
+
+
 public class ApplicationWrapper extends Application {
     public static Context context;
+    public static Context mcontext;
     CompositeDisposable disposables = new CompositeDisposable();
     public static DBIFaceAdapter mdbIFaceAdapter;
     public static DBCompanyAdapter mdbCompanyAdapter;
@@ -76,4 +77,5 @@ public class ApplicationWrapper extends Application {
     public static String BaseUrl (String domain,String endPoint){
         return String.format("https://%s.authx.com/%s",domain,endPoint);
     }
+
 }

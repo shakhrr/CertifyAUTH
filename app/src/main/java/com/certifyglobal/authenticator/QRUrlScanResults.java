@@ -97,7 +97,6 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                     Logger.toast(this, report.getString("response_text"));
                 } else {
 
-
                     if (!report.isNull("response_text") && report.getString("response_text").equals(getString(R.string.device_security))) {
                         SettingDialog();
                     //    Logger.toast(this, report.getString("Message"));

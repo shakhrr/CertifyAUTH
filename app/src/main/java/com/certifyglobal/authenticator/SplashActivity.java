@@ -49,7 +49,8 @@ public class SplashActivity extends AppCompatActivity {
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
     private boolean appLock=false;
-
+    private boolean linkOpen=false;
+    private String id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,7 @@ public class SplashActivity extends AppCompatActivity {
             Intent intent = getIntent();
             if (intent.getData() != null) {
                 data = intent.getData();
-                Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
-                intentURL.putExtra("Url", data);
-                startActivity(intent);
+                linkOpen=true;
                 Logger.debug("deep link", data.toString());
             }
             if (intent.getExtras() !=null) {
@@ -87,7 +86,7 @@ public class SplashActivity extends AppCompatActivity {
             Intent intent_o = getIntent();
 
             // push notification. App is close that time it will call
-            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null) {
+            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null && linkOpen==false) {
 
                 Intent notificationIntent = new Intent(this, PushNotificationActivity.class);
                 if (intent_o.getStringExtra("encValue") != null) {
@@ -119,7 +118,7 @@ public class SplashActivity extends AppCompatActivity {
                 }else{
                     finish();
                 }
-            } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false)) {
+            } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false) && linkOpen==false) {
                 startActivity(new Intent(this, UserActivity.class));
                 if (Utils.readFromPreferences(this, PreferencesKeys.deviceUUid, "").isEmpty())
                     Utils.getDeviceUUid(this);
@@ -131,8 +130,17 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
                 }
             } else {
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                if(linkOpen){
+                    String urlSplit[] = data.toString().split("reactivate/");
+                    id=urlSplit[1];
+                    Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
+                    intentURL.putExtra("Url", id);
+                    startActivity(intentURL);
+                    finish();
+                }else {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                }
             }
             //finish();
         } catch (Exception e) {

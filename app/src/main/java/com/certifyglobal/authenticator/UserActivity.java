@@ -39,6 +39,7 @@ import com.certifyglobal.utils.SwipeToDeleteCallback;
 import com.certifyglobal.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -118,7 +119,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     }
 
     @Override
-    public void setAction(String userName, int noValue) {
+    public void setAction(@NotNull String userName, int noValue) {
         if (userName.isEmpty()) {
             this.onJSONObjectListener(null, "delete", null);
         } else {

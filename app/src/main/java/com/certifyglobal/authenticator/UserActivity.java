@@ -8,16 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.DataSetObserver;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,37 +20,36 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.certifyglobal.async_task.AsyncJSONObjectSender;
-import com.certifyglobal.async_task.AsyncPushPayload;
+import com.certifyglobal.authenticator.facedetection.TokenAdapterRecycler;
 import com.certifyglobal.callback.Communicator;
 import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.PayloadObjectCallback;
 import com.certifyglobal.utils.EndPoints;
 import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
+import com.certifyglobal.utils.SwipeHelper;
+import com.certifyglobal.utils.SwipeToDeleteCallback;
 import com.certifyglobal.utils.Utils;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class UserActivity extends AppCompatActivity implements JSONObjectCallback, Communicator, PayloadObjectCallback {
     private String LAG = "UserActivity - ";
     private TokenPersistence mTokenPersistence;
-    private static TokenAdapter mTokenAdapter;
-    private DataSetObserver mDataSetObserver;
+    private static TokenAdapterRecycler mTokenAdapter;
+    private RecyclerView.AdapterDataObserver mDataSetObserver;
     private RefreshListBroadcastReceiver receiver;
     ImageView imageAdd;
     ImageView imageMenu;
@@ -64,7 +58,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     private PopupMenu mPopupMenu;
     public static boolean isUserIn = true;
     public int position = -1;
-    private SwipeMenuListView recyclerLocation;
+    private RecyclerView recyclerLocation;
     public static final String ACTION_IMAGE_SAVED = "com.certifyglobal.certifyauth.ACTION_IMAGE_SAVED";
     public String companyId = "";
     public String userId = "";
@@ -76,7 +70,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     private Executor executor;
 
     @Override
-    public void onJSONObjectListener(JSONObject report, String status,JSONObject req) {
+    public void onJSONObjectListener(JSONObject report, String status, JSONObject req) {
         try {
             companyId = "";
             userId = "";
@@ -126,7 +120,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     @Override
     public void setAction(String userName, int noValue) {
         if (userName.isEmpty()) {
-            this.onJSONObjectListener(null, "delete",null);
+            this.onJSONObjectListener(null, "delete", null);
         } else {
             dialog = new Dialog(UserActivity.this);
             dialog = Utils.showDialog(dialog, UserActivity.this);
@@ -143,7 +137,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     @Override
     public void onPayloadObjectListener(JSONArray report, String status) {
         try {
-            Logger.debug("payloaddddddddddddddddddddddddddddd","payload");
+            Logger.debug("payloaddddddddddddddddddddddddddddd", "payload");
             if (report == null || report.length() == 0)
                 llNotifications.setVisibility(View.GONE);
             else {
@@ -151,7 +145,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                 tvCount.setText(String.format("%d", report.length()));
                 llNotifications.setVisibility(View.VISIBLE);
                 String payload = report.getJSONObject(0).getString("payload");
-                startCountDownTimer(Utils.getTimerTimeStamp(Utils.notificationPayload(new JSONObject(payload), UserActivity.this),timeOut));
+                startCountDownTimer(Utils.getTimerTimeStamp(Utils.notificationPayload(new JSONObject(payload), UserActivity.this), timeOut));
             }
         } catch (Exception e) {
             Logger.error(LAG + "onPayloadObjectListener(JSONObject report, String status)", e.getMessage());
@@ -218,7 +212,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                 @Override
                 public void onClick(View view) {
                     try {
-                       // mPopupMenu.show();
+                        // mPopupMenu.show();
                         startActivity(new Intent(UserActivity.this, Settings.class));
                     } catch (Exception e) {
                         Logger.error(LAG + "imageMenu - setOnClickListener", e.getMessage());
@@ -226,12 +220,16 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
                 }
             });
-            mTokenAdapter = new TokenAdapter(this, this, mTokenPersistence);
+            mTokenAdapter = new TokenAdapterRecycler(this, this, mTokenPersistence);
             receiver = new RefreshListBroadcastReceiver();
             versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             registerReceiver(receiver, new IntentFilter(ACTION_IMAGE_SAVED));
             recyclerLocation = findViewById(R.id.lv_coupons);
-            recyclerLocation.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+            recyclerLocation.setAdapter(mTokenAdapter);
+            recyclerLocation.addItemDecoration(new DividerItemDecoration(recyclerLocation.getContext(), DividerItemDecoration.VERTICAL));
+            enableSwipeToDeleteAndUndo();
+
+          /*  recyclerLocation.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
             SwipeMenuCreator creator = new SwipeMenuCreator() {
 
                 @Override
@@ -251,8 +249,8 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                     // add to menu
                     menu.addMenuItem(deleteItem);
                 }
-            };
-            recyclerLocation.setMenuCreator(creator);
+            };*/
+          /*  recyclerLocation.setMenuCreator(creator);
             recyclerLocation.setAdapter(mTokenAdapter);
             recyclerLocation.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
@@ -263,16 +261,16 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
                 @Override
                 public void onSwipeEnd(int position) {
-
                     //recyclerLocation.smoothCloseMenu();
                 }
+
             });
+
             recyclerLocation.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(int pos, SwipeMenu menu, int index) {
                     try {
                     switch (index) {
-
                             case 0:
                                 position = pos;
                                 Token token = mTokenPersistence.get(pos);
@@ -288,7 +286,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                                 break;
                         }
 
-
                     }
                     catch (Exception e){
                         Logger.error("Delete action",e.getMessage());
@@ -296,7 +293,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
                     return false;
                 }
-            });
+            });*/
             // Don't permit screenshots since these might contain OTP codes.
             mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
@@ -332,19 +329,62 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
         }
     }
 
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeHelper swipeHelper = new SwipeHelper(this) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+                underlayButtons.add(new SwipeHelper.UnderlayButton(UserActivity.this,
+                        "Delete",
+                        0,
+                        Color.parseColor("#FF3C30"),
+                        new SwipeHelper.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(final int pos) {
+                                //    final String item = mTokenAdapter.getData().get(pos);
+                                // mTokenAdapter.removeItem(pos);
+
+                                try {
+                                    position = pos;
+                                    Token token = mTokenPersistence.get(pos);
+                                    String[] labelU = token.getLabel().split("\\|");
+                                    companyId = labelU.length >= 3 ? labelU[3] : "";
+                                    userId = labelU.length >= 4 ? labelU[4] : "";
+                                    hostName = labelU.length >= 5 ? labelU[5] : "";
+                                    if (labelU.length >= 2)
+                                        Utils.ShowDialog(UserActivity.this, labelU[1], position, UserActivity.this);
+                                    else
+                                        //third party account
+                                        Utils.ShowDialog(UserActivity.this, token.toString(), -2, UserActivity.this);
+
+
+                                } catch (Exception e) {
+                                    Logger.error("Delete action", e.getMessage());
+                                }
+
+
+                            }
+                        }
+                ));
+            }
+        };
+        swipeHelper.attachToRecyclerView(recyclerLocation);
+
+    }
+
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
         super.onResume();
         try {
-             if (mTokenAdapter == null) return;
-            mDataSetObserver = new DataSetObserver() {
+            if (mTokenAdapter == null) return;
+            mDataSetObserver = new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onChanged() {
                     super.onChanged();
                 }
             };
-            mTokenAdapter.registerDataSetObserver(mDataSetObserver);
+            mTokenAdapter.registerAdapterDataObserver(mDataSetObserver);
             mTokenAdapter.notifyDataSetChanged();
 
             Utils.getOSDetails(this, this);
@@ -377,7 +417,8 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     protected void onDestroy() {
         super.onDestroy();
         try {
-            mTokenAdapter.unregisterDataSetObserver(mDataSetObserver);
+            //mTokenAdapter.unregisterDataSetObserver(mDataSetObserver);
+            mTokenAdapter.unregisterAdapterDataObserver(mDataSetObserver);
             unregisterReceiver(receiver);
             countDownTimer.cancel();
         } catch (Exception e) {

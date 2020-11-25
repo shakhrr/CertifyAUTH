@@ -99,7 +99,11 @@ dependencies {
 
     testImplementation 'commons-logging:commons-logging:1.2'
     implementation 'androidx.biometric:biometric:1.0.1'
-//    implementation 'androidx.biometric:biometric:1.0.0-alpha02'
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.1'
+    implementation 'com.google.android.material:material:1.0.0'
+
+
+    //  implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
 
     //noinspection GradleCompatible
     // implementation 'org.bouncycastle:bcprov-jdk16:1.46'

@@ -116,6 +116,8 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(notificationIntent);
                 if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true)) {
                     biometricLogin();
+                }else{
+                    finish();
                 }
             } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false)) {
                 startActivity(new Intent(this, UserActivity.class));

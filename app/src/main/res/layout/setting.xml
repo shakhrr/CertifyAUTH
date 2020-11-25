@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/gray_light"
     >
 
     <include
@@ -26,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/gray_light"
                 android:gravity="start"
                 android:paddingStart="@dimen/margin20"
                 android:paddingTop="25dp"
@@ -46,7 +43,6 @@
                 android:visibility="gone">
 
                 <TextView
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -110,7 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/margin16"
-                android:background="@color/gray_light" />
+                android:background="@color/gray_light"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/ll_security_checkup"
@@ -149,7 +146,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/gray_light"
                 android:gravity="start"
                 android:paddingStart="@dimen/margin20"
                 android:paddingTop="25dp"
@@ -198,7 +194,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/gray_light"
                 android:gravity="start"
                 android:paddingStart="@dimen/margin20"
                 android:paddingTop="25dp"

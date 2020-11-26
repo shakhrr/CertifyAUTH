@@ -91,6 +91,13 @@ public class SecurityCheckupActivity extends AppCompatActivity implements Commun
             tvVersion.setText(String.format("%s %s", getResources().getString(R.string.version), packageInfo.versionName));
             tvBuild.setText(String.format("%s %s", getResources().getString(R.string.build), packageInfo.versionCode));
             tvTitle.setText(getResources().getString(R.string.security_checkup));
+            ImageView img_ic_back=findViewById(R.id.img_ic_back);
+            img_ic_back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             tvLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

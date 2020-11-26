@@ -136,7 +136,11 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
                     intentURL.putExtra("Url", id);
                     startActivity(intentURL);
-                    finish();
+                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && appLock==false) {
+                        biometricLogin();
+                    }else{
+                        finish();
+                    }
                 }else {
                     startActivity(new Intent(this, MainActivity.class));
                     finish();

@@ -92,6 +92,7 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                         ApplicationWrapper.getMdbCompanyAdapter().insertCompany(domainTemp,objJson.getString("user_id"), companyName, imageBytes);
                     }
                     String value = String.format("otpauth://totp/%s:%s|%s|%s|%s|%s|%s?secret=%s&digits=6&period=30", name.replace(" ", "%20"), companyName.replace(" ", "%20"), objJson.getString("user_name"), role.replace(" ", "%20"), companyId, objJson.getString("user_id"), domainValue, sharedKey);
+                    Logger.debug("deep result","name: "+name +" companyname: "+companyName  +"username :" +objJson.getString("user_name") +"role: " +role  +"companyid :" +companyId);
                     third = false;
                     addTokenAndFinish(value);
                     Logger.toast(this, report.getString("response_text"));
@@ -101,6 +102,8 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                         SettingDialog();
                     //    Logger.toast(this, report.getString("Message"));
                     }else{
+                        if (dialog != null)
+                            dialog.dismiss();
                         Logger.toast(QRUrlScanResults.this, report.isNull("response_text")?getString(R.string.error):report.getString("response_text"));
                         finish();
                     }
@@ -123,9 +126,12 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                     companyId=userObj.getString("CompanyId");
                     Utils.QRCodeSender(report.getString("CodeId"), userObj.getString("UserId"), userObj.getInt("CompanyId"), QRUrlScanResults.this, QRUrlScanResults.this, domainValue,header);
                 } else {
-                    if (!report.isNull("Message"))
+                    if (!report.isNull("Message")) {
                         Logger.toast(QRUrlScanResults.this, report.getString("Message"));
-                    else Logger.toast(QRUrlScanResults.this, getString(R.string.error));
+                    } else {
+                        Logger.toast(QRUrlScanResults.this, getString(R.string.error));
+                        UserDashBored();
+                    }
                     if (dialog != null)
                         dialog.dismiss();
                     if (!Utils.readFromPreferences(QRUrlScanResults.this, PreferencesKeys.isLogin, false))
@@ -165,6 +171,7 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
         }
 
     }
+
 
     private void addTokenAndFinish(String text) {
         try {

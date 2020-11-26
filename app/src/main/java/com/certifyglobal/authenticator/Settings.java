@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class Settings extends MainActivity {
             LinearLayout llapplock = findViewById(R.id.ll_applock);
             LinearLayout llRecover = findViewById(R.id.ll_recover);
             swithc_menu_lock = findViewById(R.id.swithc_menu_lock);
+            ImageView img_ic_back=findViewById(R.id.img_ic_back);
             tvTitle.setText(getResources().getString(R.string.settings));
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             tvVersion.setText(String.format("%s %s", getResources().getString(R.string.version), packageInfo.versionName));
@@ -51,6 +53,12 @@ public class Settings extends MainActivity {
                swithc_menu_lock.setChecked(false);
 
            }
+           img_ic_back.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   finish();
+               }
+           });
 
             llBioSign.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -210,7 +210,6 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         private int pos;
         private RectF clickRegion;
         private UnderlayButtonClickListener clickListener;
-        private Drawable mCustomImage;
         Bitmap icon;
 
         public UnderlayButton(Context context,String text, int imageResId, int color, UnderlayButtonClickListener clickListener) {
@@ -218,8 +217,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             this.imageResId = imageResId;
             this.color = color;
             this.clickListener = clickListener;
-            mCustomImage = context.getResources().getDrawable(R.drawable.ic_delete);
-             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_delete);
+             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_delete_new);
 
         }
 

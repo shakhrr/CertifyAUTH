@@ -299,7 +299,8 @@
             android:paddingTop="10dp"
             android:textColor="@color/black"
             android:textSize="@dimen/font_size4"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_build"
@@ -311,7 +312,8 @@
             android:paddingStart="@dimen/margin16"
             android:textColor="@color/black"
             android:textSize="@dimen/font_size4"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:visibility="gone"/>
 
     </TableLayout>
 </RelativeLayout>

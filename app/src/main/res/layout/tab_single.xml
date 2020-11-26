@@ -4,6 +4,15 @@
     android:layout_height="wrap_content"
     android:background="@color/btn_deny">
 
+    <ImageView
+        android:id="@+id/img_ic_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_back"
+        android:layout_centerInParent="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/margin05"></ImageView>
+
     <TextView android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="55dp"

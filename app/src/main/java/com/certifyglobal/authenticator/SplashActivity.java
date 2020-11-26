@@ -1,13 +1,17 @@
 package com.certifyglobal.authenticator;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.certifyglobal.async_task.AsyncGetCheckRoot;
 import com.certifyglobal.fcm.FirebaseBackgroundService;
@@ -36,21 +41,40 @@ import java.util.concurrent.Executor;
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 public class SplashActivity extends AppCompatActivity {
-    private String TAG = "SplashActivity - ";
+    private static String TAG = "SplashActivity - ";
     Intent intent;
     private static NotificationChannel mChannel;
+    Uri data;
+    private static Executor executor;
+    private static BiometricPrompt biometricPrompt;
+    private static BiometricPrompt.PromptInfo promptInfo;
+    private boolean appLock=false;
+    private boolean linkOpen=false;
+    private String id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
 
+            Intent intent = getIntent();
+            if (intent.getData() != null) {
+                data = intent.getData();
+                linkOpen=true;
+                Logger.debug("deep link", data.toString());
+            }
+            if (intent.getExtras() !=null) {
+                appLock = intent.getBooleanExtra("push", false);
+                Logger.debug("deep link push", "" + appLock);
+            }
+
             AppCenter.start(getApplication(), "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
                     Analytics.class, Crashes.class);
 
             setContentView(R.layout.activity_splash);
-         //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
+            //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
             //Device checking root or not
+
 
             new AsyncGetCheckRoot(null, "").execute();
             // once UUid is available going to HMac validations.
@@ -60,8 +84,10 @@ public class SplashActivity extends AppCompatActivity {
             if (Utils.readFromPreferences(this, PreferencesKeys.publicKey, "").isEmpty())
                 RSAKeypair.getRSAPublic(this);
             Intent intent_o = getIntent();
+
             // push notification. App is close that time it will call
-            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null) {
+            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null && linkOpen==false) {
+
                 Intent notificationIntent = new Intent(this, PushNotificationActivity.class);
                 if (intent_o.getStringExtra("encValue") != null) {
                     String decryptedStr = RSAKeypair.DecryptRSA(Utils.readFromPreferences(this, PreferencesKeys.privateKey, ""), intent_o.getStringExtra("encValue"));
@@ -85,22 +111,84 @@ public class SplashActivity extends AppCompatActivity {
                 notificationIntent.putExtra("machineName", intent_o.getStringExtra("MachineName") == null ? "" : intent_o.getStringExtra("MachineName"));
                 notificationIntent.putExtra("ip", intent_o.getStringExtra("IP") == null ? "" : intent_o.getStringExtra("IP"));
                 notificationIntent.putExtra("timeOut", intent_o.getStringExtra("TimeOut") == null ? "" : intent_o.getStringExtra("TimeOut"));
-                notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId")== null ? "" : intent_o.getStringExtra("CorrelationId"));
+                notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId") == null ? "" : intent_o.getStringExtra("CorrelationId"));
                 startActivity(notificationIntent);
-            } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false)) {
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true)) {
+                    biometricLogin();
+                }else{
+                    finish();
+                }
+            } else if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.isLogin, false) && linkOpen==false) {
                 startActivity(new Intent(this, UserActivity.class));
                 if (Utils.readFromPreferences(this, PreferencesKeys.deviceUUid, "").isEmpty())
                     Utils.getDeviceUUid(this);
                 if (Utils.readFromPreferences(this, PreferencesKeys.mobileNumber, "").isEmpty())
                     Utils.getNumberVersion(this);
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && appLock==false) {
+                    biometricLogin();
+                }else{
+                    finish();
+                }
             } else {
-                startActivity(new Intent(this, MainActivity.class));
+                if(linkOpen){
+                    String urlSplit[] = data.toString().split("reactivate/");
+                    id=urlSplit[1];
+                    Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
+                    intentURL.putExtra("Url", id);
+                    startActivity(intentURL);
+                    finish();
+                }else {
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                }
             }
-            finish();
+            //finish();
         } catch (Exception e) {
             Logger.error(TAG + "onCreate(Bundle savedInstanceState)", e.getMessage());
 
         }
     }
 
+    public void biometricLogin() {
+        try {
+
+            executor = ContextCompat.getMainExecutor(this);
+            biometricPrompt = new BiometricPrompt(SplashActivity.this,
+                    executor, new BiometricPrompt.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationError(int errorCode,
+                                                  @NonNull CharSequence errString) {
+                    super.onAuthenticationError(errorCode, errString);
+                    finishAffinity(); // Close all activites
+                    System.exit(0);
+                }
+
+                @Override
+                public void onAuthenticationSucceeded(
+                        @NonNull BiometricPrompt.AuthenticationResult result) {
+                    super.onAuthenticationSucceeded(result);
+                    finish();
+                }
+
+                @Override
+                public void onAuthenticationFailed() {
+                    super.onAuthenticationFailed();
+                    finishAffinity(); // Close all activites
+                    System.exit(0);
+                }
+            });
+
+            promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Biometric login for AuthX")
+                    .setSubtitle("Log in using your biometric credential")
+                    .setNegativeButtonText("")
+                    .setDeviceCredentialAllowed(true)
+                    .build();
+            biometricPrompt.authenticate(promptInfo);
+        } catch (Exception e) {
+            Logger.error(TAG, e.getMessage());
+        }
+
+
+    }
 }

@@ -28,7 +28,8 @@
         android:textSize="@dimen/font_size6"
         android:layout_gravity="center"
         android:singleLine="true"
-        android:maxLength="23"/>
+        android:layout_marginLeft="@dimen/margin20"
+        android:layout_marginRight="@dimen/margin20"/>
 
     <TextView
         android:id="@+id/tv_application"

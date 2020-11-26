@@ -24,8 +24,8 @@ android {
         applicationId "com.certifyglobal.authenticator"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 65
-        versionName "2.6.8.7"
+        versionCode 66
+        versionName "2.6.9"
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a'
         multiDexEnabled false
         lintOptions {
@@ -99,6 +99,11 @@ dependencies {
 
     testImplementation 'commons-logging:commons-logging:1.2'
     implementation 'androidx.biometric:biometric:1.0.1'
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.1'
+    implementation 'com.google.android.material:material:1.0.0'
+
+
+    //  implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
 
     //noinspection GradleCompatible
     // implementation 'org.bouncycastle:bcprov-jdk16:1.46'

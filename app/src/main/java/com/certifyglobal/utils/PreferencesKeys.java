@@ -23,4 +23,5 @@ public class PreferencesKeys {
     public static final String apiLink = "apiLink";
     public static final String imageVersion = "imageVersion";
     public static final String userVersion = "userVersion";
+    public static final String appLock = "appLock";
 }

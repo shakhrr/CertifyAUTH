@@ -288,38 +288,6 @@
             android:layout_marginTop="@dimen/margin05"
             android:background="@color/gray_light" />
 
-        <TableRow
-            android:id="@+id/tr_app_lock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:onClick="myOnClick"
-            android:paddingLeft="@dimen/margin10"
-            android:paddingTop="@dimen/margin10">
-
-            <ImageView
-                android:id="@+id/image_app_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/os_suss"/>
-
-            <TextView
-                android:id="@+id/tv_app_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin10"
-                android:layout_weight="1"
-                android:text="@string/app_lock"
-                android:textColor="@color/black"
-                android:textSize="@dimen/font_size4"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/menu_lock"
-                android:layout_width="52dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="12dp"/>
-        </TableRow>
 
 
         <TextView

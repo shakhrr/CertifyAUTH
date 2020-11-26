@@ -34,8 +34,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.certifyglobal.async_task.AsyncJSONObjectHeader;
 import com.certifyglobal.async_task.AsyncJSONObjectImageUpdate;
@@ -85,6 +89,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -101,6 +106,10 @@ import butterknife.ButterKnife;
 
 public class Utils {
     private static final String LOG = "Utils - ";
+    private static Executor executor;
+    private static BiometricPrompt biometricPrompt;
+    private static BiometricPrompt.PromptInfo promptInfo;
+
 
     public static final class permission {
         public static final String[] camera = new String[]{android.Manifest.permission.CAMERA};
@@ -216,6 +225,8 @@ public class Utils {
             obj.put("correlation_id", correlationId);
 
             new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, EndPoints.pushAuthenticationStatus)).execute();
+            Logger.debug("push Log",obj.toString());
+            Logger.debug("push Loguuid ","deviceuuid   "+Utils.readFromPreferences(context, PreferencesKeys.deviceUUid, "")+"request ID  "+ requestId+ "private key:  "+ Utils.readFromPreferences(context, PreferencesKeys.privateKey, "")+"public key:   "+Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
 
         } catch (Exception e) {
             Logger.error(LOG + "PushAuthenticationStatus(String userEmail, boolean isAuthenticated, JSONObjectCallback callback, String requestId)", e.getMessage());
@@ -1136,6 +1147,47 @@ public class Utils {
         } catch (Exception e) {
             Logger.error(LOG + "PushAuthenticationStatus(String userEmail, boolean isAuthenticated, JSONObjectCallback callback, String requestId)", e.getMessage());
         }
+    }
+
+    public static void biometricLogin(Context context) {
+        try {
+            executor = ContextCompat.getMainExecutor(context);
+            biometricPrompt = new BiometricPrompt((FragmentActivity) context,
+                    executor, new BiometricPrompt.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationError(int errorCode,
+                                                  @NonNull CharSequence errString) {
+                    super.onAuthenticationError(errorCode, errString);
+                    ((FragmentActivity) context).finishAffinity();
+                }
+                @Override
+                public void onAuthenticationSucceeded(
+                        @NonNull BiometricPrompt.AuthenticationResult result) {
+                    super.onAuthenticationSucceeded(result);
+                }
+                @Override
+                public void onAuthenticationFailed() {
+                    super.onAuthenticationFailed();
+                    ((FragmentActivity) context).finishAffinity();
+                }
+            });
+
+            promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Biometric login for AuthX")
+                    .setSubtitle("Log in using your biometric credential")
+                    .setNegativeButtonText("")
+                    .setDeviceCredentialAllowed(true)
+                    .build();
+
+            // Prompt appears when user clicks "Log in".
+            // Consider integrating with the keystore to unlock cryptographic operations,
+            // if needed by your app.
+            biometricPrompt.authenticate(promptInfo);
+        }catch (Exception e){
+            Logger.error(LOG,e.getMessage());
+        }
+
+
     }
 
 }

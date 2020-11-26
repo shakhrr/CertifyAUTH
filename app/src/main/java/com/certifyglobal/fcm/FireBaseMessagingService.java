@@ -142,7 +142,6 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
 
             } else { //close notification
                 Logger.debug("closeeeeeeeeeeeeeeeeeeeeeeeeee","splash");
-
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 PendingIntent intent =

@@ -123,6 +123,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                 notificationManager.cancelAll();
             //}
 
+
             if (intent.getStringExtra("companyName").trim().isEmpty())
                 tvComName.setVisibility(View.GONE);
             tvComName.setText(intent.getStringExtra("companyName"));
@@ -166,8 +167,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             String[] values = GuidUserId.split(":");
             userId = values[0];
             String oldId = values.length > 1 ? values[1] : "";
-             getLatestIcon();
-
             this.runOnUiThread(new Runnable() {
                 public void run() {
                     mTokenPersistence = new TokenPersistence(PushNotificationActivity.this);
@@ -180,11 +179,12 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                             position=i;
                             isExist = true;
                             try {
-                                if (!userVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.userVersion, ""))) {
+                                if ((!userVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.userVersion, ""))) || !SettingVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, ""))) {
                                     String label = String.format("%s|%s|%s|0|%s|%s", companyName, userName, role, userId, hostName);
                                     oldtemp = String.format("otpauth://totp/%s:%s?secret=%s&digits=6&period=30", tokenTemp.getIssuer(), label, tokenTemp.getSecret());
                                     addTokenAndFinish(oldtemp, position);
                                     Utils.saveToPreferences(PushNotificationActivity.this, PreferencesKeys.userVersion, userVersion);
+                                    getLatestIcon();
                                 }
                             }catch (Exception e){
                                 Logger.error(TAG,"user version null");
@@ -290,13 +290,17 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                         Intent palmIntent;
                         switch (pushType) {
                             case "6":
-                                dialog = new Dialog(PushNotificationActivity.this);
-                                dialog = Utils.showDialog(dialog, PushNotificationActivity.this);
-                                if (dialog != null) dialog.show();
-                                Utils.PushAuthenticationStatus(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
-                             //  push_layout.setVisibility(View.GONE);
-                                finish();
-                                break;
+                                try {
+                                    dialog = new Dialog(PushNotificationActivity.this);
+                                    dialog = Utils.showDialog(dialog, PushNotificationActivity.this);
+                                    if (dialog != null) dialog.show();
+                                    Utils.PushAuthenticationStatus(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
+                                    //  push_layout.setVisibility(View.GONE);
+                                   // finish();
+                                    break;
+                                }catch (Exception e){
+                                    Logger.error(TAG,e.getMessage());
+                                }
                             case "2":
                             case "5":
                                 if (authenticationBooleanError) {
@@ -368,10 +372,10 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
 
     private void getLatestIcon() {
         try {
-            if (!SettingVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, ""))) {
+         //   if (!SettingVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, ""))) {
                 Utils.companyImageUpdate(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
                 Utils.saveToPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, SettingVersion);
-            }
+           // }
         }catch (Exception e){
             Logger.error("version null",e.getMessage());
         }
@@ -403,7 +407,9 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
     @Override
     public void onJSONObjectListener(JSONObject report, String status, JSONObject req) {
         try {
-            if (dialog != null) dialog.dismiss();
+
+            Logger.debug("push api response", report.toString());
+
             if (report == null) {
                 setResultUI(getResources().getString(R.string.denied), getResources().getColor(R.color.orange), R.drawable.ic_deny);
                 return;
@@ -427,14 +433,14 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
 
         } catch (Exception e) {
             Logger.error(TAG, e.getMessage());
+            if (dialog != null) dialog.dismiss();
+
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     private void faceSettingCall() {
@@ -502,8 +508,12 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  //  finish();
-                    startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
+                    finish();
+                    if (dialog != null) dialog.dismiss();
+                    Intent  intent=new Intent(PushNotificationActivity.this,SplashActivity.class);
+                    intent.putExtra("push",true);
+                    startActivity(intent);
+                  //  startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
                 }
             }, 1000);
 
@@ -597,6 +607,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
         super.onDestroy();
         try {
             countDownTimer.cancel();
+            dialog.dismiss();
         } catch (Exception e) {
             Logger.error(TAG + "onDestroy()", e.getMessage());
         }

@@ -246,7 +246,9 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
                 @Override
                 public void run() {
                     finish();
-                    startActivity(new Intent(ImageActivity.this, SplashActivity.class));
+                    Intent  intent=new Intent(ImageActivity.this,SplashActivity.class);
+                    intent.putExtra("push",true);
+                    startActivity(intent);
                 }
             }, 2000);
 
@@ -283,7 +285,9 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
             @Override
             public void run() {
                 finish();
-                startActivity(new Intent(ImageActivity.this, SplashActivity.class));
+                Intent  intent=new Intent(ImageActivity.this,SplashActivity.class);
+                intent.putExtra("push",true);
+                startActivity(intent);
             }
         }, 2000);
 

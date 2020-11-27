@@ -91,7 +91,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             setContentView(R.layout.push_notification_new);
             TextView tvTitle = findViewById(R.id.tv_title);
             TextView tvComName = findViewById(R.id.tv_com_name);
@@ -106,6 +105,8 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             TextView tvDate = findViewById(R.id.tv_date);
             TextView tvTime = findViewById(R.id.tv_time);
             ImageView imageLogo = findViewById(R.id.image_logo);
+            ImageView image_back = findViewById(R.id.img_ic_back);
+            image_back.setVisibility(View.GONE);
             rlMessage = findViewById(R.id.rl_message);
             tvMessage = findViewById(R.id.tv_message_notification);
             push_layout = findViewById(R.id.push_layout);
@@ -122,7 +123,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             if (notificationManager != null)
                 notificationManager.cancelAll();
             //}
-
 
             if (intent.getStringExtra("companyName").trim().isEmpty())
                 tvComName.setVisibility(View.GONE);
@@ -288,7 +288,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                         }
                         statusBoolean = true;
                         Intent palmIntent;
-                        switch (pushType) {
+                        switch (pushType) {//normal push
                             case "6":
                                 try {
                                     dialog = new Dialog(PushNotificationActivity.this);
@@ -430,7 +430,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                 Logger.toast(PushNotificationActivity.this, report.getString("ExceptionMessage"));
             }
 
-
         } catch (Exception e) {
             Logger.error(TAG, e.getMessage());
             if (dialog != null) dialog.dismiss();
@@ -545,12 +544,11 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendDenying(3);
-                                    startActivity(new Intent(PushNotificationActivity.this, SplashActivity.class));
-
-
+                                  /*  Intent  intent=new Intent(PushNotificationActivity.this,SplashActivity.class);
+                                    intent.putExtra("push",true);
+                                    startActivity(intent);*/
                                 }
                             })
-
 //                            .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }

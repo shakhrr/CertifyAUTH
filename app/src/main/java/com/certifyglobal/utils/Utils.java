@@ -36,6 +36,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricConstants;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -46,8 +48,10 @@ import com.certifyglobal.async_task.AsyncJSONObjectImageUpdate;
 import com.certifyglobal.async_task.AsyncJSONObjectSender;
 import com.certifyglobal.async_task.AsyncJSONObjectSenderSetting;
 import com.certifyglobal.authenticator.ApplicationWrapper;
+import com.certifyglobal.authenticator.MainActivity;
 import com.certifyglobal.authenticator.PushNotificationActivity;
 import com.certifyglobal.authenticator.R;
+import com.certifyglobal.authenticator.SplashActivity;
 import com.certifyglobal.authenticator.UserActivity;
 import com.certifyglobal.callback.Communicator;
 import com.certifyglobal.callback.JSONObjectCallback;
@@ -1149,42 +1153,77 @@ public class Utils {
         }
     }
 
-    public static void biometricLogin(Context context) {
+    public static void closeApp(Context context) {
         try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }catch(Exception e){
+            Logger.error(LOG,"close APP" +e.getMessage());
+        }
+    }
+
+
+    public static void biometricLogin(Context context,String act) {
+        try {
+
             executor = ContextCompat.getMainExecutor(context);
-            biometricPrompt = new BiometricPrompt((FragmentActivity) context,
+            biometricPrompt = new BiometricPrompt( ((SplashActivity)context),
                     executor, new BiometricPrompt.AuthenticationCallback() {
                 @Override
                 public void onAuthenticationError(int errorCode,
                                                   @NonNull CharSequence errString) {
                     super.onAuthenticationError(errorCode, errString);
-                    ((FragmentActivity) context).finishAffinity();
+                    Logger.debug("deep error","onAuthenticationError"+errorCode);
+
+                    if(errorCode==BiometricConstants.ERROR_USER_CANCELED){
+                        Utils.saveToPreferences(context, PreferencesKeys.appLockpref,false);
+                        Utils.closeApp(context);
+                        ((Activity)context).finish();
+                    }else if(errorCode== BiometricConstants.ERROR_TIMEOUT){
+                        Utils.saveToPreferences(context, PreferencesKeys.appLockpref,false);
+                        Utils.closeApp(context);
+                        ((Activity)context).finish();
+                    }else if(errorCode==BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL){
+                        Utils.saveToPreferences(context,PreferencesKeys.appLock,false);
+                        ((Activity)context).finish();
+                    }else if(errorCode==BiometricConstants.ERROR_NO_BIOMETRICS){
+                        Utils.saveToPreferences(context,PreferencesKeys.appLock,false);
+                        ((Activity)context).finish();
+                    }else if(errorCode==BiometricConstants.ERROR_HW_NOT_PRESENT || errorCode==BiometricConstants.ERROR_HW_UNAVAILABLE){
+                        Utils.saveToPreferences(context,PreferencesKeys.appLock,false);
+                        ((Activity)context).finish();
+                    }
                 }
+
                 @Override
                 public void onAuthenticationSucceeded(
                         @NonNull BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
+                    Utils.saveToPreferences(context,PreferencesKeys.appLockpref,true);
+                    ((Activity)context).finish();
+                    Logger.debug("deep SplashActivity","onAuthenticationSucceeded"+result);
+
                 }
+
                 @Override
                 public void onAuthenticationFailed() {
                     super.onAuthenticationFailed();
-                    ((FragmentActivity) context).finishAffinity();
+                    Utils.closeApp(context);
+                    ((Activity)context).finish();
                 }
             });
 
             promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Biometric login for AuthX")
-                    .setSubtitle("Log in using your biometric credential")
+                    .setTitle("Unlock AuthX")
+                    .setSubtitle("Confirm your screen lock pattern, Password, Face or Fingerprint")
                     .setNegativeButtonText("")
                     .setDeviceCredentialAllowed(true)
                     .build();
-
-            // Prompt appears when user clicks "Log in".
-            // Consider integrating with the keystore to unlock cryptographic operations,
-            // if needed by your app.
             biometricPrompt.authenticate(promptInfo);
-        }catch (Exception e){
-            Logger.error(LOG,e.getMessage());
+        } catch (Exception e) {
+            Logger.error(LOG, e.getMessage());
         }
 
 

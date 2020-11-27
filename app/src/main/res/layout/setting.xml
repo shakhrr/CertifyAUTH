@@ -512,7 +512,8 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size4"
-                tools:ignore="RtlSymmetry"/>
+                tools:ignore="RtlSymmetry"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

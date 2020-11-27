@@ -416,15 +416,24 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         try {
             //mTokenAdapter.unregisterDataSetObserver(mDataSetObserver);
             mTokenAdapter.unregisterAdapterDataObserver(mDataSetObserver);
             unregisterReceiver(receiver);
             countDownTimer.cancel();
+
         } catch (Exception e) {
 
         }
+        super.onDestroy();
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.debug("deep stop","UserActivity");
     }
 
     @Override

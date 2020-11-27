@@ -17,17 +17,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.certifyglobal.callback.JSONObjectCallback;
+import com.certifyglobal.fcm.OnClearFromRecentService;
 import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.Utils;
 
 
 import org.json.JSONObject;
+
+import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements JSONObjectCallback {
     private static final String TAG = "MainActivity - ";
@@ -36,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
     ImageView imageMenu;
     private String versionCode;
     private PopupMenu mPopupMenu;
+    private static Executor executor;
+    private static BiometricPrompt biometricPrompt;
+    private static BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,4 +259,83 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
 
         nm.notify(10, notif.build());
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Logger.debug("deep destroy","Mainactivity");
+     //   Utils.saveToPreferences(MainActivity.this, PreferencesKeys.appLockpref,false);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.debug("deep stop","Mainactivity");
+
+        //    Utils.saveToPreferences(MainActivity.this, PreferencesKeys.appLockpref,false);
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Logger.debug("deep restart","Mainactivity");
+       // Utils.biometricLogin(MainActivity.this,"main");
+      //  biometricLogin();
+//        finish();
+//       startActivity(new Intent(this,SplashActivity.class));
+
+
+    }
+
+    /*public void biometricLogin() {
+        try {
+
+            executor = ContextCompat.getMainExecutor(this);
+            biometricPrompt = new BiometricPrompt(MainActivity.this,
+                    executor, new BiometricPrompt.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationError(int errorCode,
+                                                  @NonNull CharSequence errString) {
+                    super.onAuthenticationError(errorCode, errString);
+                    if(errorCode==10){
+                        Utils.saveToPreferences(MainActivity.this, PreferencesKeys.appLockpref,false);
+                    }
+                    Utils.closeApp(MainActivity.this);
+                    finish();
+                }
+
+                @Override
+                public void onAuthenticationSucceeded(
+                        @NonNull BiometricPrompt.AuthenticationResult result) {
+                    super.onAuthenticationSucceeded(result);
+                    Utils.saveToPreferences(MainActivity.this,PreferencesKeys.appLockpref,true);
+                    finish();
+                    Logger.debug("deep SplashActivity","onAuthenticationSucceeded"+result);
+
+                }
+
+                @Override
+                public void onAuthenticationFailed() {
+                    super.onAuthenticationFailed();
+                    Utils.closeApp(MainActivity.this);
+                    finish();
+                }
+            });
+
+            promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Unlock AuthX")
+                    .setSubtitle("Confirm your screen lock pattern, Password, Face or Fingerprint")
+                    .setNegativeButtonText("")
+                    .setDeviceCredentialAllowed(true)
+                    .build();
+            biometricPrompt.authenticate(promptInfo);
+        } catch (Exception e) {
+            Logger.error(TAG, e.getMessage());
+        }
+
+
+    }*/
+
 }

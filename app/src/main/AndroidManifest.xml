@@ -157,6 +157,7 @@
             android:exported="true">
 
         </service>
+        <service android:name="com.certifyglobal.fcm.OnClearFromRecentService" android:stopWithTask="false" />
     </application>
 
 </manifest>

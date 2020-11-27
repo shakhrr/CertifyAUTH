@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.certifyglobal.async_task.AsyncGetCheckRoot;
 import com.certifyglobal.fcm.FirebaseBackgroundService;
+import com.certifyglobal.fcm.OnClearFromRecentService;
 import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.RSAKeypair;
@@ -48,7 +49,6 @@ public class SplashActivity extends AppCompatActivity {
     private static Executor executor;
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
-    private boolean appLock=false;
     private boolean linkOpen=false;
     private String id = "";
 
@@ -63,10 +63,11 @@ public class SplashActivity extends AppCompatActivity {
                 linkOpen=true;
                 Logger.debug("deep link", data.toString());
             }
-            if (intent.getExtras() !=null) {
-                appLock = intent.getBooleanExtra("push", false);
+        /*    if (intent.getExtras() !=null) {
+              boolean appLock = intent.getBooleanExtra("push", false);
+                Utils.saveToPreferences(SplashActivity.this,PreferencesKeys.appLockpref,appLock);
                 Logger.debug("deep link push", "" + appLock);
-            }
+            }*/
 
             AppCenter.start(getApplication(), "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
                     Analytics.class, Crashes.class);
@@ -75,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
             //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
             //Device checking root or not
 
-
+            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
             new AsyncGetCheckRoot(null, "").execute();
             // once UUid is available going to HMac validations.
             if (!Utils.readFromPreferences(this, PreferencesKeys.deviceUUid, "").isEmpty())
@@ -113,8 +114,8 @@ public class SplashActivity extends AppCompatActivity {
                 notificationIntent.putExtra("timeOut", intent_o.getStringExtra("TimeOut") == null ? "" : intent_o.getStringExtra("TimeOut"));
                 notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId") == null ? "" : intent_o.getStringExtra("CorrelationId"));
                 startActivity(notificationIntent);
-                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true)) {
-                    biometricLogin();
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                    Utils.biometricLogin(SplashActivity.this,"splash");
                 }else{
                     finish();
                 }
@@ -124,8 +125,8 @@ public class SplashActivity extends AppCompatActivity {
                     Utils.getDeviceUUid(this);
                 if (Utils.readFromPreferences(this, PreferencesKeys.mobileNumber, "").isEmpty())
                     Utils.getNumberVersion(this);
-                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && appLock==false) {
-                    biometricLogin();
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                    Utils.biometricLogin(SplashActivity.this,"splash");
                 }else{
                     finish();
                 }
@@ -136,14 +137,19 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
                     intentURL.putExtra("Url", id);
                     startActivity(intentURL);
-                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && appLock==false) {
-                        biometricLogin();
+                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                        Utils.biometricLogin(SplashActivity.this,"spalsh");
+
                     }else{
                         finish();
                     }
                 }else {
                     startActivity(new Intent(this, MainActivity.class));
-                    finish();
+                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                        Utils.biometricLogin(SplashActivity.this,"splash");
+                    }else{
+                        finish();
+                    }
                 }
             }
             //finish();
@@ -152,7 +158,7 @@ public class SplashActivity extends AppCompatActivity {
 
         }
     }
-
+/*
     public void biometricLogin() {
         try {
 
@@ -163,28 +169,34 @@ public class SplashActivity extends AppCompatActivity {
                 public void onAuthenticationError(int errorCode,
                                                   @NonNull CharSequence errString) {
                     super.onAuthenticationError(errorCode, errString);
-                    finishAffinity(); // Close all activites
-                    System.exit(0);
+                    if(errorCode==10){
+                        Utils.saveToPreferences(SplashActivity.this, PreferencesKeys.appLockpref,false);
+                    }
+                    Utils.closeApp(SplashActivity.this);
+                    finish();
                 }
 
                 @Override
                 public void onAuthenticationSucceeded(
                         @NonNull BiometricPrompt.AuthenticationResult result) {
                     super.onAuthenticationSucceeded(result);
+                    Utils.saveToPreferences(SplashActivity.this,PreferencesKeys.appLockpref,true);
                     finish();
+                    Logger.debug("deep SplashActivity","onAuthenticationSucceeded"+result);
+
                 }
 
                 @Override
                 public void onAuthenticationFailed() {
                     super.onAuthenticationFailed();
-                    finishAffinity(); // Close all activites
-                    System.exit(0);
+                    Utils.closeApp(SplashActivity.this);
+                    finish();
                 }
             });
 
             promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Biometric login for AuthX")
-                    .setSubtitle("Log in using your biometric credential")
+                    .setTitle("Unlock AuthX")
+                    .setSubtitle("Confirm your screen lock pattern, Password, Face or Fingerprint")
                     .setNegativeButtonText("")
                     .setDeviceCredentialAllowed(true)
                     .build();
@@ -194,5 +206,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
 
-    }
+    }*/
+
+
 }

@@ -44,10 +44,10 @@ public class Requestor {
     public static String requestJson(String urlStr, JSONObject reqPing, String header) {
         String responseStr = null;
         String[] endPoint=urlStr.split(".com/");
-        if (EndPoints.deployment == EndPoints.Mode.Local) {
-            Logger.debug("urlStr", urlStr);
-            Logger.debug("req", reqPing.toString());
-        }
+//        if (EndPoints.deployment == EndPoints.Mode.Local) {
+            Logger.debug("deepurlStr", urlStr);
+            Logger.debug("deepreq", reqPing.toString());
+     //   }
         try {
             HttpPost httpost = new HttpPost(urlStr);
             httpost.addHeader("Content-type", "application/json");
@@ -62,6 +62,8 @@ public class Requestor {
             if(status.getStatusCode()== HttpStatus.SC_OK) {
                 responseStr = EntityUtils
                         .toString(responseHttp.getEntity());
+                Logger.debug("deepresponse", responseStr);
+
             }else {
                 JSONObject objMessage = new JSONObject();
                 objMessage.put("Message", "Server is down Please try again!!!");
@@ -76,6 +78,7 @@ public class Requestor {
                 properties.put("URL:",urlStr);
                 properties.put("Response:",responseStr);
                 Analytics.trackEvent(endPoint[1], properties);
+                Logger.debug("deep invalid response",responseStr);
 
             }
           // String.valueOf(responseStr);

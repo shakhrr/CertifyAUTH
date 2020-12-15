@@ -40,6 +40,7 @@ public class TokenAdapterRecycler extends RecyclerView.Adapter<TokenAdapterRecyc
     private  Map<String, TokenCode> mTokenCodes;
     private Communicator communicator;
     private TextView tvPrevious;
+    private Context context;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private Context ctx;
@@ -65,6 +66,7 @@ public class TokenAdapterRecycler extends RecyclerView.Adapter<TokenAdapterRecyc
         mLayoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mClipMan = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
         mTokenCodes = new HashMap<>();
+        this.context=ctx;
 
         registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

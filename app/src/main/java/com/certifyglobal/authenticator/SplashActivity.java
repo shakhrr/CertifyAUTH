@@ -72,11 +72,13 @@ public class SplashActivity extends AppCompatActivity {
             AppCenter.start(getApplication(), "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
                     Analytics.class, Crashes.class);
 
+            startService(new Intent(SplashActivity.this, OnClearFromRecentService.class));
+
             setContentView(R.layout.activity_splash);
             //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
             //Device checking root or not
 
-            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+
             new AsyncGetCheckRoot(null, "").execute();
             // once UUid is available going to HMac validations.
             if (!Utils.readFromPreferences(this, PreferencesKeys.deviceUUid, "").isEmpty())
@@ -87,7 +89,7 @@ public class SplashActivity extends AppCompatActivity {
             Intent intent_o = getIntent();
 
             // push notification. App is close that time it will call
-            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null && linkOpen==false) {
+            if (intent_o.getExtras() != null && intent_o.getStringExtra("pushType") != null && intent.getData()==null) {
 
                 Intent notificationIntent = new Intent(this, PushNotificationActivity.class);
                 if (intent_o.getStringExtra("encValue") != null) {
@@ -114,7 +116,7 @@ public class SplashActivity extends AppCompatActivity {
                 notificationIntent.putExtra("timeOut", intent_o.getStringExtra("TimeOut") == null ? "" : intent_o.getStringExtra("TimeOut"));
                 notificationIntent.putExtra("correlationId", intent_o.getStringExtra("CorrelationId") == null ? "" : intent_o.getStringExtra("CorrelationId"));
                 startActivity(notificationIntent);
-                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, false) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
                     Utils.biometricLogin(SplashActivity.this,"splash");
                 }else{
                     finish();
@@ -125,7 +127,7 @@ public class SplashActivity extends AppCompatActivity {
                     Utils.getDeviceUUid(this);
                 if (Utils.readFromPreferences(this, PreferencesKeys.mobileNumber, "").isEmpty())
                     Utils.getNumberVersion(this);
-                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, false) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
                     Utils.biometricLogin(SplashActivity.this,"splash");
                 }else{
                     finish();
@@ -137,7 +139,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intentURL = new Intent(SplashActivity.this, QRUrlScanResults.class);
                     intentURL.putExtra("Url", id);
                     startActivity(intentURL);
-                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, false) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
                         Utils.biometricLogin(SplashActivity.this,"spalsh");
 
                     }else{
@@ -145,7 +147,7 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 }else {
                     startActivity(new Intent(this, MainActivity.class));
-                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, true) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
+                    if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, false) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
                         Utils.biometricLogin(SplashActivity.this,"splash");
                     }else{
                         finish();
@@ -155,7 +157,7 @@ public class SplashActivity extends AppCompatActivity {
             //finish();
         } catch (Exception e) {
             Logger.error(TAG + "onCreate(Bundle savedInstanceState)", e.getMessage());
-
+            Logger.debug("deep Splash",e.getMessage());
         }
     }
 /*

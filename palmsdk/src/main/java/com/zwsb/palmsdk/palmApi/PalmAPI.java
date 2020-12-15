@@ -85,7 +85,7 @@ public class PalmAPI {
             }
 
             //return CryptoUtil.decrypt(ret);
-            //Log.d("PALM_LOG", "READED: " + dataString);
+            Log.d(" deep PALM_LOG", "READED: " + dataString);
             return Base64.decode(dataString.toString(), Base64.DEFAULT);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class PalmAPI {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(BaseUtil.USER_GESTURE_PATH + BaseUtil.CURRENT_PALM_PATH + userName, MODE_PRIVATE)));
             bw.write(Base64.encodeToString(data, Base64.DEFAULT));
             bw.close();
-            //Log.d("PALM_LOG", "WRITE SUCCESS: " + Base64.encodeToString(data, Base64.DEFAULT));
+            Log.d(" deep PALM_LOG", "WRITE SUCCESS: " + Base64.encodeToString(data, Base64.DEFAULT));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -211,6 +211,7 @@ public class PalmAPI {
             m_PalmBiometrics.AddModel(modelID[1]);
 
             status = m_PalmBiometrics.Match(modelID);
+            Log.d("deep leftright", String.valueOf(status));
         } else if (isLeftPalmEnabled) {
             byte[] modelLeftData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + userName);
             PalmModelID[] modelID = new PalmModelID[1];
@@ -221,16 +222,18 @@ public class PalmAPI {
 
             m_PalmBiometrics.AddModel(modelID[0]);
             status = m_PalmBiometrics.Match(modelID);
+            Log.d("deep left", String.valueOf(status));
+
         } else if (isRightPalmEnabled) {
             byte[] modelRightData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + userName);
             PalmModelID[] modelID = new PalmModelID[1];
             modelID[0] = new PalmModelID();
 
             m_PalmBiometrics.LoadModel(modelRightData, modelID[0]);
-            Log.i("PalmIDLog", "add model id " + byteArrayToHex(modelID[0].id));
-
             m_PalmBiometrics.AddModel(modelID[0]);
             status = m_PalmBiometrics.Match(modelID);
+            Log.d("deep right", String.valueOf(status));
+
         }
        // Log.i("PalmIDLog", "status " + status );
         if (null != status && status != PalmStatus.Success) {

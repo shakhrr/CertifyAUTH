@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 
 public class AuthActivity extends AppCompatActivity {
@@ -105,7 +106,6 @@ public class AuthActivity extends AppCompatActivity {
         intent.putExtra(AuthActivity.USER_NAME_KEY, userName);
         intent.putExtra(AuthActivity.IS_LOCK_NEEDED_KEY, isLockNeeded);
         intent.putExtra(AuthActivity.IS_PIN_NEEDED_KEY, isPinEnabled);
-
         return intent;
     }
 
@@ -398,9 +398,11 @@ public class AuthActivity extends AppCompatActivity {
                 if (isRightPalm) {
                     SharedPreferenceHelper.setRightPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName);
+                    Log.d("deep right palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "RIGHT_PALM_ID_KEY"+ SharedPreferenceHelper.RIGHT_PALM_ID_KEY+ "username:"+userName);
                 } else {
                     SharedPreferenceHelper.setLeftPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName);
+                    Log.d("deep left palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "LEFT_PALM_ID_KEY"+ SharedPreferenceHelper.LEFT_PALM_ID_KEY+ "username:"+userName);
                 }
 
                 finish();

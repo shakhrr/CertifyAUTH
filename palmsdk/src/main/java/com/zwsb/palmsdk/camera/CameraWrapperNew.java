@@ -309,7 +309,8 @@ public class CameraWrapperNew extends CameraWrapper {
                             PalmMatchingResultMessage matchResult = (PalmMatchingResultMessage) message;
                             boolean isMatch = matchResult.result;
                             float score = matchResult.score;
-                            Log.i(BaseUtil.LOG_TAG, "Matching result:" + isMatch + "  Score:" + score);
+                            Log.d("deep", "deep Matching result new:" + isMatch + "  Score:" + score);
+
 
                             atleastOneMatched = isMatch || atleastOneMatched;
                             bestMatchScore = Math.max(bestMatchScore, score);
@@ -318,10 +319,14 @@ public class CameraWrapperNew extends CameraWrapper {
                                     CameraEvent e = CameraEvent.ON_SCAN_SUCCESS;
                                     e.score = bestMatchScore;
                                     EventBus.getDefault().post(e);
+                                    Log.d("deep score success",""+bestMatchScore);
+
                                 } else {
                                     CameraEvent e = CameraEvent.ON_SCAN_FAILURE;
                                     e.score = bestMatchScore;
                                     EventBus.getDefault().post(e);
+                                    Log.d("deep score fail",""+bestMatchScore);
+
                                 }
                                 counter = 0;
                                 atleastOneMatched = false;
@@ -335,7 +340,7 @@ public class CameraWrapperNew extends CameraWrapper {
                             System.out.println("modeling result");
                             byte[] modelResultData = ((PalmModelingResultMessage) message).data;
                             PalmAPI.saveModel(mContext, modelResultData, userName);
-                            System.out.println(modelResultData.toString());
+                            System.out.println("deep result data"+modelResultData.toString());
                             EventBus.getDefault().post(CameraEvent.ON_SAVE_PALM_SUCCESS.setData(message));
                             break;
                         case LivenessResult:

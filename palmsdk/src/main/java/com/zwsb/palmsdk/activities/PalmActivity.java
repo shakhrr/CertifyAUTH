@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,11 @@ import com.zwsb.palmsdk.R;
 import com.zwsb.palmsdk.helpers.BaseUtil;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 import com.zwsb.palmsdk.palmApi.PalmAPI;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Random;
+import java.util.logging.Logger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -229,7 +236,7 @@ public class PalmActivity extends AppCompatActivity {
             } else {
                 PalmAPI.m_PalmBiometrics.ExtractModelMask(SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName));
             }
-            Log.i(BaseUtil.LOG_TAG, "PalmAPI.m_PalmBiometrics.ExtractModelMask CALLED");
+          Log.d("deep async",SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName) + "right key :"+SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName));
         }
 
         @Override
@@ -252,7 +259,7 @@ public class PalmActivity extends AppCompatActivity {
                     img.setPixel(x, y, rgb);
                 }
             }
-
+              Log.d("deep logg","bitmap");
             return img;
         }
     }

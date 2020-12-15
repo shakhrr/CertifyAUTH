@@ -108,7 +108,6 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-
             if (requestCode == 7) {
                 dialog = new Dialog(this);
                 dialog = Utils.showDialog(dialog, this);
@@ -117,7 +116,7 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
                     Utils.PushAuthenticationStatus(pushType, statusBoolean = true, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
                 else
                     Utils.PushAuthenticationStatus(pushType, statusBoolean = false, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
-
+                    Toast.makeText(this, R.string.check_failure, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Logger.error(TAG + "onActivityResult(int requestCode, int resultCode, Intent data)", e.getMessage());
@@ -146,7 +145,7 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
             if (requestId.equals(requestIdServer)) {
                 if (statusBoolean) {
                     llMessage.setBackgroundColor(getResources().getColor(R.color.green));
-                    tvMessage.setText(pushType.equals("5") ? getResources().getString(R.string.authenticated) : getResources().getString(R.string.enrollment_successful));
+                    tvMessage.setText(pushType.equals("3") ? getResources().getString(R.string.authenticated) : getResources().getString(R.string.enrollment_successful));
                     tvMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_approve, 0, 0);
                 } else {
                     SetFailed(getResources().getString(R.string.denied));

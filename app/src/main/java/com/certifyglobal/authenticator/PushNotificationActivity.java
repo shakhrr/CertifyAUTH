@@ -473,7 +473,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
 
     public void palmSDK() {
         try {
-            PalmSDK.init(this, "windows_demo@certifyglobal.com", new PalmSDK.InitSDKCallback() {
+            PalmSDK.init(this, "certifyglobal-ge5", new PalmSDK.InitSDKCallback() {
                 @Override
                 public void onSuccess() {
                     authenticationBoolean = true;
@@ -639,7 +639,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
     public void onJSONObjectListenerImage(String report, String status, JSONObject req) {
         try {
             if (report == null) return;
-
+            byte[] imageBytes=null;
             JSONObject json1=null;
             try {
                 String formatedString = report.substring(1, report.length() - 1);
@@ -648,20 +648,17 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             }catch (Exception e){
                 e.printStackTrace();
                 json1 = new JSONObject(report);
-
             }
 
             if (json1.getInt("response_code") == 1) {
                 JSONObject objJson = json1.getJSONObject("user_data");
                 String companyName = objJson.isNull("company_name") ? "" : objJson.getString("company_name");
                 if (!objJson.isNull("company_icon") && !objJson.getString("company_icon").isEmpty()) {
-                    byte[] imageBytes = Base64.decode(objJson.getString("company_icon"), Base64.DEFAULT);
-                    ApplicationWrapper.getMdbCompanyAdapter().insertCompany(hostName, userId, companyName, imageBytes);
+                   imageBytes = Base64.decode(objJson.getString("company_icon"), Base64.DEFAULT);
 //                    UserActivity.RefreshListBroadcastReceiver refreshListBroadcastReceiver=new UserActivity.RefreshListBroadcastReceiver();
 //                    registerReceiver(refreshListBroadcastReceiver, new IntentFilter(ACTION_IMAGE_SAVED));
-
-
                 }
+                ApplicationWrapper.getMdbCompanyAdapter().insertCompany(hostName, userId, companyName, imageBytes);
 
             }
         } catch (JSONException e) {

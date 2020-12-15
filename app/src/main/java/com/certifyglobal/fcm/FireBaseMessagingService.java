@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -58,11 +59,14 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
             Map<String, String> data = remoteMessage.getData();
              String title=remoteMessage.getData().get("Title");
              String body=remoteMessage.getData().get("Body");
-                Logger.debug(TAG, "dataaaaaaaaa" + remoteMessage.getData());
                 sendNotification(title,
                        body, remoteMessage.getData(), remoteMessage.getNotification().getClickAction());
-                Logger.debug(TAG, " sendNotification(remoteMessage.getNotification().getTitle(),\n" +
-                        "                        remoteMessage.getNotification().getBody(), remoteMessage.getData(), remoteMessage.getNotification().getClickAction()); " + remoteMessage.getNotification().getClickAction());
+
+                Log.d( "deep From: " , remoteMessage.getFrom());
+                Log.d( "deep Notification Message Body: " , remoteMessage.getNotification().getBody());
+                Log.d( "deep Notification Click Action: " , remoteMessage.getNotification().getClickAction());
+                Log.d( "deep dataaaaaaaaa" , remoteMessage.getData().toString());
+
             }
           /*  if (remoteMessage.getNotification() == null) {
                 sendNotification("", "", remoteMessage.getData(), "");
@@ -85,7 +89,6 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
     @SuppressLint("WrongConstant")
     private void sendNotification(String messageTitle, String messageBody, Map<String, String> row,String click_action) {
         try {
-
             NotificationCompat.Builder builder=null;//open notification
             Intent notificationIntent = new Intent(this, PushNotificationActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -117,6 +120,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
                     notificationIntent.putExtra("Version", row.get("Version")== null ? "" : row.get("Version"));
                     notificationIntent.putExtra("UserVersion", row.get("UserVersion")== null ? "" : row.get("UserVersion"));
                     notificationIntent.putExtra("SettingVersion", row.get("SettingVersion")== null ? "" : row.get("SettingVersion"));
+                    Logger.debug("deep ","user version:"+ row.get("UserVersion") +"Setting version:"+ row.get("SettingVersion"));
 
 
 

@@ -510,7 +510,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             Logger.error(LAG + "startCountDownTimer(long timeCountInMilliSeconds)", e.getMessage());
         }
     }
-
     @Override
     public void onBackPressed() {
         finishAffinity();

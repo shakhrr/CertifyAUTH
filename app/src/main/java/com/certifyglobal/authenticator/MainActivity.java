@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
                 Intent livePreIntent = new Intent(this, ScanActivity.class);
                 livePreIntent.putExtra("type", "Barcode");
                 startActivity(livePreIntent);
-                finish();
+             //   finish();
             } else
                 Logger.toast(MainActivity.this, getResources().getString(R.string.network_error));
 
@@ -338,4 +338,8 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
 
     }*/
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

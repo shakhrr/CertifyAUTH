@@ -59,6 +59,4 @@ public class EndPoints {
     public static final String companyImageUpdate = domainUrl + "getCompanyUpdates";
     public static final String LICENSE_FILE = "res/raw/iengine.lic"; public enum Mode {Prod, Local}
 
-
-
 }

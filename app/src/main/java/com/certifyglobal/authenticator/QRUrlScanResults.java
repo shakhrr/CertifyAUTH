@@ -93,6 +93,7 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                     }
                     String value = String.format("otpauth://totp/%s:%s|%s|%s|%s|%s|%s?secret=%s&digits=6&period=30", name.replace(" ", "%20"), companyName.replace(" ", "%20"), objJson.getString("user_name"), role.replace(" ", "%20"), companyId, objJson.getString("user_id"), domainValue, sharedKey);
                     Logger.debug("deep result","name: "+name +" companyname: "+companyName  +"username :" +objJson.getString("user_name") +"role: " +role  +"companyid :" +companyId);
+                    Logger.debug("deep comp",report.toString());
                     third = false;
                     addTokenAndFinish(value);
                     Logger.toast(this, report.getString("response_text"));

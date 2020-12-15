@@ -47,7 +47,7 @@ public class Settings extends MainActivity {
             tvVersion.setText(String.format("%s %s", getResources().getString(R.string.version), packageInfo.versionName));
             tvBuild.setText(String.format("%s %s", getResources().getString(R.string.build), packageInfo.versionCode));
 
-           if(Utils.readFromPreferences(Settings.this,PreferencesKeys.appLock,true)){
+           if(Utils.readFromPreferences(Settings.this,PreferencesKeys.appLock,false)){
                swithc_menu_lock.setChecked(true);
            }else{
                swithc_menu_lock.setChecked(false);

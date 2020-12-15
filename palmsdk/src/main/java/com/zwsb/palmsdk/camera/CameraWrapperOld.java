@@ -296,7 +296,7 @@ public class CameraWrapperOld extends CameraWrapper {
                                 PalmMatchingResultMessage matchResult = (PalmMatchingResultMessage) message;
                                 boolean isMatch = matchResult.result;
                                 float score = matchResult.score;
-                                Log.i(BaseUtil.LOG_TAG, "Matching result:" + isMatch + "  Score:" + score);
+                                Log.d("deep", "deep Matching result old:" + isMatch + "  Score:" + score);
 
                                 atleastOneMatched = isMatch || atleastOneMatched;
                                 bestMatchScore = Math.max(bestMatchScore, score);
@@ -305,10 +305,14 @@ public class CameraWrapperOld extends CameraWrapper {
                                         CameraEvent e = CameraEvent.ON_SCAN_SUCCESS;
                                         e.score = bestMatchScore;
                                         EventBus.getDefault().post(e);
+                                        Log.d("deep score success old",""+bestMatchScore);
+
                                     } else {
                                         CameraEvent e = CameraEvent.ON_SCAN_FAILURE;
                                         e.score = bestMatchScore;
                                         EventBus.getDefault().post(e);
+                                        Log.d("deep score fail old",""+bestMatchScore);
+
                                     }
                                     Log.i(BaseUtil.LOG_TAG, "Matching result:" + isMatch + "  bestMatchScore:" + bestMatchScore);
                                     counter = 0;

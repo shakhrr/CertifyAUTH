@@ -99,13 +99,6 @@ import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import butterknife.ButterKnife;
 
 public class Utils {
@@ -738,7 +731,7 @@ public class Utils {
 
     private static void palmSDK(final Context context) {
         try {
-            PalmSDK.init(context, "windows_demo@certifyglobal.com", new PalmSDK.InitSDKCallback() {
+            PalmSDK.init(context, "certifyglobal-ge5", new PalmSDK.InitSDKCallback() {//windows_demo@certifyglobal.com old license key
                 @Override
                 public void onSuccess() {
                     PushNotificationActivity.authenticationBoolean = true;
@@ -1212,6 +1205,8 @@ public class Utils {
                     super.onAuthenticationFailed();
                     Utils.closeApp(context);
                     ((Activity)context).finish();
+                    Logger.debug("deep SplashActivity","onAuthenticationFailed");
+
                 }
             });
 

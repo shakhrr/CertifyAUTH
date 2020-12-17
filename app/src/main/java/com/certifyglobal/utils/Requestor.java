@@ -1,16 +1,7 @@
 package com.certifyglobal.utils;
 
 
-import android.content.Context;
-import android.os.Bundle;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.CrashlyticsInitProvider;
-import com.google.android.gms.common.util.CrashUtils;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.microsoft.appcenter.analytics.Analytics;
-import com.microsoft.appcenter.analytics.EventProperties;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -33,8 +24,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
-import io.fabric.sdk.android.services.common.Crash;
 
 public class Requestor {
 
@@ -139,12 +128,6 @@ public class Requestor {
                 }
                 in.close();
                 data = sb.toString();
-           // }else{
-//                JSONObject objMessage = new JSONObject();
-//                objMessage.put("Message", "Server is down Please try again!!!");
-//                data=objMessage.toString();
-          //  }
-
             if (EndPoints.deployment == EndPoints.Mode.Local)
                 Logger.debug("data", data);
             return data;

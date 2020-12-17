@@ -161,6 +161,8 @@ public class AuthActivity extends AppCompatActivity {
                             cameraWrapper.stopPreview();
                         }
                         cameraWrapper.startPreview(cameraFacing = 1);
+                        Log.d("deep AuthActivity",""+cameraFacing);
+
 
                         //   init(1);  //cameraWrapper = getCameraWrapper(1);
                         // cameraWrapper.startPreview();
@@ -186,6 +188,8 @@ public class AuthActivity extends AppCompatActivity {
 
                         }
                         cameraWrapper.startPreview(cameraFacing = 0);
+                        Log.d("deep AuthActivity",""+cameraFacing);
+
 //                    cameraWrapper.stopPreview();
                         //   init(0);//   cameraWrapper = getCameraWrapper(0);
                         //      cameraWrapper.startPreview();
@@ -239,22 +243,20 @@ public class AuthActivity extends AppCompatActivity {
         super.onResume();
         try {
             if (null != cameraWrapper) {
-                cameraWrapper.startPreview(cameraFacing);
+                cameraWrapper.startPreview(1);
+                Log.d("deep Auth 0back",""+cameraFacing);
             }
             timeCountInMilliSeconds = getTimerTimeStamp(timeStamp);
             startCountDownTimer();
-
         } catch (Exception ignore) {
 
         }
     }
-
     @Override
     protected void onPause() {
         if (null != cameraWrapper) {
             cameraWrapper.stopPreview();
         }
-
         super.onPause();
     }
 
@@ -457,10 +459,20 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!isLockNeeded) {
-            Intent intent = new Intent();
-            setResult(ON_CLOSE_RESULT_CODE, intent);
-            this.finish();
+//            Intent intent = new Intent();
+//            setResult(ON_CLOSE_RESULT_CODE, intent);
+          //  this.finish();
             countDownTimer.cancel();
+            try {
+                Intent myIntent = new Intent(this,Class.forName("com.certifyglobal.authenticator.UserActivity"));
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent );
+               finishAndRemoveTask();
+               finishAffinity();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -9,16 +9,11 @@ import android.graphics.Color;
 import com.certifyglobal.database.DBAdapter;
 import com.certifyglobal.database.DBCompanyAdapter;
 import com.certifyglobal.database.DBIFaceAdapter;
-import com.crashlytics.android.Crashlytics;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 
-
-import java.util.concurrent.Executor;
-
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.disposables.CompositeDisposable;
-import okhttp3.internal.Util;
-
-
 
 public class ApplicationWrapper extends Application {
     public static Context context;
@@ -31,10 +26,9 @@ public class ApplicationWrapper extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
         context = getApplicationContext();
-      //  PalmSDK.context = context;
         mDatabase = new DBAdapter(this);
+        initAppCenter();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager =
@@ -76,6 +70,11 @@ public class ApplicationWrapper extends Application {
     }
     public static String BaseUrl (String domain,String endPoint){
         return String.format("https://%s.authx.com/%s",domain,endPoint);
+    }
+    private void initAppCenter() {
+        AppCenter.start(this, "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
+                Analytics.class, Crashes.class);
+        Crashes.setEnabled(true);
     }
 
 }

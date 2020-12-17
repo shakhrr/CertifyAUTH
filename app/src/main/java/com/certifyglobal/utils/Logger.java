@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.microsoft.appcenter.analytics.Analytics;
 
 public class Logger {
@@ -20,7 +19,8 @@ public class Logger {
         if (EndPoints.deployment == EndPoints.Mode.Local) {
             if (message == null) message = "null";
             Log.e(classname,message);
-        } else  Analytics.trackEvent("Error:"+message);
+        } else Analytics.trackEvent(classname+" "+message);
+
 
     }
 }

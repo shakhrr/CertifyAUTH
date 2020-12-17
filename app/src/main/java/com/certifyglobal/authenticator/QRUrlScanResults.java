@@ -19,7 +19,6 @@ import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.Requestor;
 import com.certifyglobal.utils.Utils;
-import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

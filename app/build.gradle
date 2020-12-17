@@ -24,8 +24,8 @@ android {
         applicationId "com.certifyglobal.authenticator"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 66
-        versionName "3.0"
+        versionCode 67
+        versionName "2.7"
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a'
         multiDexEnabled false
         lintOptions {
@@ -60,7 +60,7 @@ android {
 }
 
 dependencies {
-    def appCenterSdkVersion = '2.5.1'
+    def appCenterSdkVersion = '3.2.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -87,7 +87,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'   // http
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    //implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.google.firebase:firebase-perf:19.0.2'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
@@ -101,7 +101,9 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.0.1'
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.1'
     implementation 'com.google.android.material:material:1.0.0'
-
+//app center
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     //  implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
 

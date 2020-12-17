@@ -105,8 +105,6 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
                     return false;
                 }
             });
-
-
         } catch (Exception e) {
             Logger.error(TAG, e.getMessage());
         }
@@ -126,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
             Logger.error(TAG, e.getMessage());
         }
     }
-
-
     @Override
     public void onJSONObjectListener(JSONObject report, String status,JSONObject req) {
         try {
@@ -272,7 +268,6 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
     protected void onStop() {
         super.onStop();
         Logger.debug("deep stop","Mainactivity");
-
         //    Utils.saveToPreferences(MainActivity.this, PreferencesKeys.appLockpref,false);
 
     }

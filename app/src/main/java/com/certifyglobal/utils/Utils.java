@@ -58,7 +58,6 @@ import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.JSONObjectCallbackImage;
 import com.certifyglobal.callback.JSONObjectCallbackSetting;
 import com.certifyglobal.pojo.FaceSettingInfo;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.util.Hex;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -362,8 +361,6 @@ public class Utils {
 
         } catch (Exception e) {
             Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());
-            Crashlytics.logException(e);
-
         }
     }
 

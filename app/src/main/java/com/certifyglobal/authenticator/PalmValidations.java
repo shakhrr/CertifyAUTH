@@ -116,7 +116,6 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
                     Utils.PushAuthenticationStatus(pushType, statusBoolean = true, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
                 else
                     Utils.PushAuthenticationStatus(pushType, statusBoolean = false, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
-                    Toast.makeText(this, R.string.check_failure, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Logger.error(TAG + "onActivityResult(int requestCode, int resultCode, Intent data)", e.getMessage());

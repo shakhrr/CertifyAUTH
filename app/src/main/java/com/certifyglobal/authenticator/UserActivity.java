@@ -230,72 +230,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             recyclerLocation.addItemDecoration(new DividerItemDecoration(recyclerLocation.getContext(), DividerItemDecoration.VERTICAL));
             enableSwipeToDeleteAndUndo();
 
-          /*  recyclerLocation.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
-            SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-                @Override
-                public void create(SwipeMenu menu) {
-                    SwipeMenuItem deleteItem = new SwipeMenuItem(UserActivity.this);
-                    // set item background
-                    deleteItem.setBackground(new ColorDrawable(Color.rgb(0xff, 0x33, 0x33)));
-                    // set item width
-                    deleteItem.setWidth(Utils.dp2px(70, UserActivity.this));
-                    // set item title
-                    //  deleteItem.setTitle("Delete");
-                    deleteItem.setIcon(R.drawable.ic_delete);
-                    // set item title fontsize
-                    deleteItem.setTitleSize(12);
-                    // set item title font color
-                    deleteItem.setTitleColor(Color.WHITE);
-                    // add to menu
-                    menu.addMenuItem(deleteItem);
-                }
-            };*/
-          /*  recyclerLocation.setMenuCreator(creator);
-            recyclerLocation.setAdapter(mTokenAdapter);
-            recyclerLocation.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-                @Override
-                public void onSwipeStart(int position) {
-                    recyclerLocation.smoothOpenMenu(position);
-                }
-
-                @Override
-                public void onSwipeEnd(int position) {
-                    //recyclerLocation.smoothCloseMenu();
-                }
-
-            });
-
-            recyclerLocation.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(int pos, SwipeMenu menu, int index) {
-                    try {
-                    switch (index) {
-                            case 0:
-                                position = pos;
-                                Token token = mTokenPersistence.get(pos);
-                                String[] labelU = token.getLabel().split("\\|");
-                                companyId = labelU.length >= 3 ? labelU[3] : "";
-                                userId = labelU.length >= 4 ? labelU[4] : "";
-                                hostName = labelU.length >= 5 ? labelU[5] : "";
-                                if (labelU.length >= 2)
-                                    Utils.ShowDialog(UserActivity.this, labelU[1], position, UserActivity.this);
-                                else
-                                    //third party account
-                                    Utils.ShowDialog(UserActivity.this, token.toString(), -2, UserActivity.this);
-                                break;
-                        }
-
-                    }
-                    catch (Exception e){
-                        Logger.error("Delete action",e.getMessage());
-                    }
-
-                    return false;
-                }
-            });*/
-            // Don't permit screenshots since these might contain OTP codes.
+                    // Don't permit screenshots since these might contain OTP codes.
             mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {

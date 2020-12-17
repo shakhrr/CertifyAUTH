@@ -28,7 +28,6 @@ import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.RSAKeypair;
 import com.certifyglobal.utils.Utils;
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -63,14 +62,8 @@ public class SplashActivity extends AppCompatActivity {
                 linkOpen=true;
                 Logger.debug("deep link", data.toString());
             }
-        /*    if (intent.getExtras() !=null) {
-              boolean appLock = intent.getBooleanExtra("push", false);
-                Utils.saveToPreferences(SplashActivity.this,PreferencesKeys.appLockpref,appLock);
-                Logger.debug("deep link push", "" + appLock);
-            }*/
 
-            AppCenter.start(getApplication(), "fb0bbd5c-7f29-4969-9361-dbb7d52f2415",
-                    Analytics.class, Crashes.class);
+            AppCenter.setEnabled(true);
 
             startService(new Intent(SplashActivity.this, OnClearFromRecentService.class));
 
@@ -160,55 +153,5 @@ public class SplashActivity extends AppCompatActivity {
             Logger.debug("deep Splash",e.getMessage());
         }
     }
-/*
-    public void biometricLogin() {
-        try {
-
-            executor = ContextCompat.getMainExecutor(this);
-            biometricPrompt = new BiometricPrompt(SplashActivity.this,
-                    executor, new BiometricPrompt.AuthenticationCallback() {
-                @Override
-                public void onAuthenticationError(int errorCode,
-                                                  @NonNull CharSequence errString) {
-                    super.onAuthenticationError(errorCode, errString);
-                    if(errorCode==10){
-                        Utils.saveToPreferences(SplashActivity.this, PreferencesKeys.appLockpref,false);
-                    }
-                    Utils.closeApp(SplashActivity.this);
-                    finish();
-                }
-
-                @Override
-                public void onAuthenticationSucceeded(
-                        @NonNull BiometricPrompt.AuthenticationResult result) {
-                    super.onAuthenticationSucceeded(result);
-                    Utils.saveToPreferences(SplashActivity.this,PreferencesKeys.appLockpref,true);
-                    finish();
-                    Logger.debug("deep SplashActivity","onAuthenticationSucceeded"+result);
-
-                }
-
-                @Override
-                public void onAuthenticationFailed() {
-                    super.onAuthenticationFailed();
-                    Utils.closeApp(SplashActivity.this);
-                    finish();
-                }
-            });
-
-            promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Unlock AuthX")
-                    .setSubtitle("Confirm your screen lock pattern, Password, Face or Fingerprint")
-                    .setNegativeButtonText("")
-                    .setDeviceCredentialAllowed(true)
-                    .build();
-            biometricPrompt.authenticate(promptInfo);
-        } catch (Exception e) {
-            Logger.error(TAG, e.getMessage());
-        }
-
-
-    }*/
-
 
 }

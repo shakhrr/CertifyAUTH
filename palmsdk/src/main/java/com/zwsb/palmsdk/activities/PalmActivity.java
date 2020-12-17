@@ -271,7 +271,6 @@ public class PalmActivity extends AppCompatActivity {
             SharedPreferenceHelper.setLeftPalmEnabled(PalmActivity.this, false, userName);
             Intent intent = new Intent();
             setResult(ON_CLOSE_RESULT_CODE, intent);
-
             finish();
         }
     }

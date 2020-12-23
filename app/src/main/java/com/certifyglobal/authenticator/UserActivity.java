@@ -1,13 +1,16 @@
 package com.certifyglobal.authenticator;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +35,7 @@ import com.certifyglobal.authenticator.facedetection.TokenAdapterRecycler;
 import com.certifyglobal.callback.Communicator;
 import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.PayloadObjectCallback;
+import com.certifyglobal.fragment.BottomSheetDialog;
 import com.certifyglobal.utils.EndPoints;
 import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
@@ -178,6 +183,8 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             imageMenu = findViewById(R.id.image_menu);
             llNotifications = findViewById(R.id.ll_notifications);
             tvCount = findViewById(R.id.tv_count_notification);
+            if(Utils.readFromPreferences(this,PreferencesKeys.bottomSheet,true))
+            openBottomDialog();
             llNotifications.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -204,7 +211,11 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             imageAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanQR();
+                    if (ContextCompat.checkSelfPermission(UserActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(UserActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(UserActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        scanQR();
+                    }else{
+                        Utils.PermissionRequest(UserActivity.this, Utils.permission.camera_phone);
+                    }
                 }
             });
             mPopupMenu = new PopupMenu(this, imageMenu);
@@ -252,6 +263,33 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
         } catch (Exception e) {
             Logger.error(LAG + "onCreate(Bundle savedInstanceState)", e.getMessage());
+        }
+    }
+
+    private void openBottomDialog() {
+        KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        try {
+            versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (myKM != null && !myKM.isKeyguardSecure()) {
+            BottomSheetDialog bottomSheet = new BottomSheetDialog();
+            bottomSheet.show(getSupportFragmentManager(),
+                    "ModalBottomSheet");
+        }else if (Utils.compareTowString(versionCode, Utils.readFromPreferences(this, PreferencesKeys.appVersion, "2.4"))) {
+            BottomSheetDialog bottomSheet = new BottomSheetDialog();
+            bottomSheet.show(getSupportFragmentManager(),
+                    "ModalBottomSheet");
+        }else if(Utils.readFromPreferences(this, PreferencesKeys.checkRoot, false)){
+            BottomSheetDialog bottomSheet = new BottomSheetDialog();
+            bottomSheet.show(getSupportFragmentManager(),
+                    "ModalBottomSheet");
+        }else if (Utils.compareTowString(Build.VERSION.RELEASE, Utils.readFromPreferences(this, PreferencesKeys.osVersion, "8.1"))){
+            BottomSheetDialog bottomSheet = new BottomSheetDialog();
+            bottomSheet.show(getSupportFragmentManager(),
+                    "ModalBottomSheet");
         }
     }
 

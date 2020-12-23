@@ -114,8 +114,8 @@ public class Utils {
        public static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
         public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE};
         public static final String[] location = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
-        public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
-        public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE};
+        public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+        public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
 
     }
 
@@ -1236,9 +1236,9 @@ public class Utils {
     public static void gotoSetting(Context context) {
         try {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            alertDialogBuilder.setTitle("Permission Needed");
+            alertDialogBuilder.setTitle("Permission Required");
             alertDialogBuilder
-                    .setMessage("Go to app settings to enable permission")
+                    .setMessage("Go to App Permission Settings to enable the permissions.")
                     .setCancelable(false)
                     .setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1248,8 +1248,7 @@ public class Utils {
                             intent.setData(uri);
                             context.startActivity(intent);
                         }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
@@ -1262,17 +1261,25 @@ public class Utils {
     }
 
     public static void locationPermission(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        try {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-        }else{
-            Utils.PermissionRequest((Activity) context, Utils.permission.location);
+            } else {
+                Utils.PermissionRequest((Activity) context, Utils.permission.location);
+            }
+        }catch (Exception e){
+            Logger.error("Util locationPermission",e.getMessage());
         }
     }
 
     public static void cameraPermission(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-        }else{
-            Utils.PermissionRequest((Activity) context, Utils.permission.camera_phone);
+        try {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                Utils.PermissionRequest((Activity) context, Utils.permission.camera_phone);
+            }
+        }catch (Exception e){
+            Logger.error("Util cameraPermission",e.getMessage());
         }
     }
 

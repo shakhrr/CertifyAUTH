@@ -158,4 +158,7 @@
     <string name="phone">Phone</string>
     <string name="camera">Camera</string>
     <string name="storage">Storage</string>
+    <string name="security_msg">We have detected some security issues with your device that require your attention.</string>
+    <string name="fix_later">Fix Later</string>
+    <string name="fix_now">Fix Now</string>
 </resources>

@@ -171,7 +171,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             String[] values = GuidUserId.split(":");
             userId = values[0];
             String oldId = values.length > 1 ? values[1] : "";
-            Utils.locationPermission(PushNotificationActivity.this);
+            Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.location);
             this.runOnUiThread(new Runnable() {
                 public void run() {
                     mTokenPersistence = new TokenPersistence(PushNotificationActivity.this);
@@ -298,13 +298,19 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                         switch (pushType) {//normal push
                             case "6":
                                 try {
-                                    dialog = new Dialog(PushNotificationActivity.this);
-                                    dialog = Utils.showDialog(dialog, PushNotificationActivity.this);
-                                    if (dialog != null) dialog.show();
-                                    Utils.PushAuthenticationStatus(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
-                                    //  push_layout.setVisibility(View.GONE);
-                                   // finish();
-                                    break;
+                                    if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&  ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                                        dialog = new Dialog(PushNotificationActivity.this);
+                                        dialog = Utils.showDialog(dialog, PushNotificationActivity.this);
+                                        if (dialog != null) dialog.show();
+                                        Utils.PushAuthenticationStatus(pushType, true, PushNotificationActivity.this, requestId, userId, PushNotificationActivity.this, 0, true, correlationId);
+                                        //  push_layout.setVisibility(View.GONE);
+                                        // finish();
+                                        break;
+                                    }else {
+                                        Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.location);
+                                    }
+
                                 }catch (Exception e){
                                     Logger.error(TAG,e.getMessage());
                                 }
@@ -314,7 +320,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     Logger.toast(PushNotificationActivity.this, getResources().getString(R.string.lic_error));
                                     return;
                                 }
-                                if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ) {
+                                if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED &&  ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&  ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                                     Intent livePreIntent = new Intent(PushNotificationActivity.this, LivePreviewActivity.class);
                                     livePreIntent.putExtra("type", "Face");
                                     livePreIntent.putExtra("pushType", pushType);
@@ -337,17 +343,22 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     Logger.toast(PushNotificationActivity.this, getResources().getString(R.string.lic_error));
                                     return;
                                 }
-                                palmIntent = new Intent(PushNotificationActivity.this, PalmValidations.class);
-                                palmIntent.putExtra("pushType", pushType);
-                                palmIntent.putExtra("user", userName);
-                                palmIntent.putExtra("requestId", requestId);
-                                palmIntent.putExtra("userId", userId);
-                                palmIntent.putExtra("timeStamp", timeStamp);
-                                palmIntent.putExtra("timeOut", timeOut);
-                                palmIntent.putExtra("correlationId", correlationId);
-                                startActivity(palmIntent);
-                                finish();
-                                break;
+                                if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED &&  ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&  ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                                    palmIntent = new Intent(PushNotificationActivity.this, PalmValidations.class);
+                                    palmIntent.putExtra("pushType", pushType);
+                                    palmIntent.putExtra("user", userName);
+                                    palmIntent.putExtra("requestId", requestId);
+                                    palmIntent.putExtra("userId", userId);
+                                    palmIntent.putExtra("timeStamp", timeStamp);
+                                    palmIntent.putExtra("timeOut", timeOut);
+                                    palmIntent.putExtra("correlationId", correlationId);
+                                    startActivity(palmIntent);
+                                    finish();
+                                    break;
+                                }else{
+                                    Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.camera_phone);
+                                }
                         }
                     } catch (Exception e) {
                         Logger.error(TAG + "tvYes - > onClick(View v)", e.getMessage());

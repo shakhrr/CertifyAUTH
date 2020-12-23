@@ -32,6 +32,7 @@ public class OnClearFromRecentService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Utils.saveToPreferences(OnClearFromRecentService.this, PreferencesKeys.appLockpref,false);
+        Utils.saveToPreferences(OnClearFromRecentService.this, PreferencesKeys.bottomSheet,true);
         Logger.debug("deep destroy","UserActivity");
         stopSelf();
     }

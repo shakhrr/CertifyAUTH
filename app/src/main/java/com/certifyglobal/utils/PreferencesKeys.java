@@ -31,5 +31,7 @@ public class PreferencesKeys {
     public static final String storage = "storage";
     public static final String permissionFirst = "permissionfirst";
     public static final String Deviceaddress = "deviceaddress";
+    public static final String bottomSheet = "bottomsheet";
+
 
 }

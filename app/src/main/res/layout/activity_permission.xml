@@ -109,7 +109,8 @@
         android:orientation="horizontal"
         android:padding="@dimen/margin05"
         android:background="@color/white"
-        android:layout_marginTop="@dimen/margin10">
+        android:layout_marginTop="@dimen/margin10"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/img_storage"

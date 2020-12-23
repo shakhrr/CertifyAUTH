@@ -49,6 +49,7 @@ import com.certifyglobal.async_task.AsyncJSONObjectSender;
 import com.certifyglobal.async_task.AsyncJSONObjectSenderSetting;
 import com.certifyglobal.authenticator.ApplicationWrapper;
 import com.certifyglobal.authenticator.MainActivity;
+import com.certifyglobal.authenticator.PermissionActivity;
 import com.certifyglobal.authenticator.PushNotificationActivity;
 import com.certifyglobal.authenticator.R;
 import com.certifyglobal.authenticator.SplashActivity;
@@ -82,6 +83,7 @@ import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,7 +113,7 @@ public class Utils {
         public static final String[] camera = new String[]{android.Manifest.permission.CAMERA};
        public static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
         public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE};
-        public static final String[] location = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        public static final String[] location = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
         public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE};
 
@@ -137,6 +139,13 @@ public class Utils {
     // Mobile Info
     private static JSONObject MobileDetailsNew(Context context) {
         JSONObject obj2 = new JSONObject();
+        GPSTracker gpsTracker=new GPSTracker(context);
+        gpsTracker.getLocation();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+        }else{
+            Utils.PermissionRequest((Activity) context, Utils.permission.location);
+        }
         try {
             obj2.put("mobile_number", Utils.readFromPreferences(context, PreferencesKeys.mobileNumber, "+1"));
             obj2.put("device_model", Build.MODEL);
@@ -150,6 +159,7 @@ public class Utils {
             obj2.put("jail_broken", Utils.readFromPreferences(context, PreferencesKeys.checkRoot, false));
             obj2.put("device_encryption", "" + isEncrypted(context));
             obj2.put("mobile_ip", Utils.getLocalIpAddress());
+            obj2.put("device_location", Utils.readFromPreferences(context,PreferencesKeys.Deviceaddress,""));
 
         } catch (Exception e) {
             Logger.error(LOG + "MobileDetails(Context context)", e.getMessage());
@@ -1228,7 +1238,7 @@ public class Utils {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             alertDialogBuilder.setTitle("Permission Needed");
             alertDialogBuilder
-                    .setMessage("Go to App setting to enable permission")
+                    .setMessage("Go to app settings to enable permission")
                     .setCancelable(false)
                     .setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1248,6 +1258,21 @@ public class Utils {
             alertDialog.show();
         }catch (Exception e){
             Logger.error("PermissionActivity",e.getMessage());
+        }
+    }
+
+    public static void locationPermission(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+        }else{
+            Utils.PermissionRequest((Activity) context, Utils.permission.location);
+        }
+    }
+
+    public static void cameraPermission(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+        }else{
+            Utils.PermissionRequest((Activity) context, Utils.permission.camera_phone);
         }
     }
 

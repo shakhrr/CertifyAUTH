@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
                         scanQR();
                     }else{
                         Utils.PermissionRequest(MainActivity.this, Utils.permission.camera_phone);
+                        Utils.locationPermission(MainActivity.this);
+
                     }
                 }
             });
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
                         scanQR();
                     }else{
                         Utils.PermissionRequest(MainActivity.this, Utils.permission.camera_phone);
+                        Utils.locationPermission(MainActivity.this);
                     }
                 }
             });
@@ -257,51 +260,6 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
                 }
             }
         }
-    }
-
-    public void noto2() // paste in activity
-    {
-        try {
-         NotificationManager   notifManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-         NotificationChannel mChannel=null;
-
-            if (notifManager == null) {
-                notifManager = (NotificationManager)getSystemService
-                        (Context.NOTIFICATION_SERVICE);
-            }
-            if (mChannel == null) {
-                mChannel = new NotificationChannel
-                        ("1", "qa", NotificationManager.IMPORTANCE_HIGH);
-                mChannel.setDescription("welcome");
-                mChannel.enableVibration(true);
-                notifManager.createNotificationChannel(mChannel);
-            }
-        } catch (Exception e) {
-            Logger.error(TAG + "createNotificationChannel(String title, String channel, String description)", e.getMessage());
-        }
-        NotificationCompat.Builder notif;
-        NotificationManager nm;
-        notif = new NotificationCompat.Builder(this, "1");
-        notif.setSmallIcon(R.drawable.ic_defalt_icon);
-        notif.setContentTitle("");
-        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        notif.setSound(path);
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        Intent yesReceive = new Intent();
-        yesReceive.setAction("com.certifyglobal.fcm.YES");
-        PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-        notif.addAction(R.drawable.ic_defalt_icon, "Yes", pendingIntentYes);
-
-
-        Intent yesReceive2 = new Intent();
-        yesReceive2.setAction("com.certifyglobal.fcm.NO");
-        PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, 12345, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-        notif.addAction(R.drawable.ic_defalt_icon, "No", pendingIntentYes2);
-
-
-
-        nm.notify(10, notif.build());
     }
 
     @Override

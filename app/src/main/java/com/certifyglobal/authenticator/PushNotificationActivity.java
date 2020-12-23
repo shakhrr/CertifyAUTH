@@ -1,6 +1,7 @@
 package com.certifyglobal.authenticator;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -170,6 +171,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             String[] values = GuidUserId.split(":");
             userId = values[0];
             String oldId = values.length > 1 ? values[1] : "";
+            Utils.locationPermission(PushNotificationActivity.this);
             this.runOnUiThread(new Runnable() {
                 public void run() {
                     mTokenPersistence = new TokenPersistence(PushNotificationActivity.this);
@@ -261,11 +263,11 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                     else
                         tvTitle.setText(getResources().getString(R.string.face_login_request));
                     tvYes.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_face_auth, 0, 0);
-                    cameraPermission();
+                    Utils.cameraPermission(PushNotificationActivity.this);
                     break;
                 case "3":
                 case "4":
-                    cameraPermission();
+                    Utils.cameraPermission(PushNotificationActivity.this);
                     SharedPreferenceHelper.setLivenessCheck(this, SharedPreferenceHelper.LIVENESS_CHECK_KEY, true);
                     if (!authenticationBoolean) {
                         tvYes.setEnabled(false);
@@ -378,14 +380,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             Logger.error(TAG, e.getMessage());
         }
     }
-
-    private void cameraPermission() {
-        if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ) {
-        }else{
-            Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.camera_phone);
-        }
-    }
-
     private void getLatestIcon() {
         try {
          //   if (!SettingVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, ""))) {

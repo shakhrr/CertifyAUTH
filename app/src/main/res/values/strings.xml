@@ -154,4 +154,8 @@
     <string name="security">SECURITY</string>
     <string name="tv_help">HELP</string>
     <string name="about_passcodes">About Passcodes</string>
+    <string name="permission">Permissions</string>
+    <string name="phone">Phone</string>
+    <string name="camera">Camera</string>
+    <string name="storage">Storage</string>
 </resources>

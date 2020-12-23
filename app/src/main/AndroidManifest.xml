@@ -130,6 +130,9 @@
         <activity
             android:name=".DeviceListActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".PermissionActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -199,7 +199,7 @@ public class AuthActivity extends AppCompatActivity {
                     }
                 }
             });
-            if (Constant.PermissionRequest(AuthActivity.this, Constant.permission.all)) {
+            if (Constant.PermissionRequest(AuthActivity.this, Constant.permission.camera_phone)) {
                 Toast.makeText(this, R.string.permissions_alert, Toast.LENGTH_SHORT).show();
                 finish();
             } else {

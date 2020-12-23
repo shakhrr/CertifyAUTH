@@ -25,4 +25,9 @@ public class PreferencesKeys {
     public static final String userVersion = "userVersion";
     public static final String appLock = "appLock";
     public static final String appLockpref = "appLockpref";
+    public static final String phone = "phone";
+    public static final String camera = "camera";
+    public static final String location = "location";
+    public static final String storage = "storage";
+    public static final String permissionFirst = "permissionfirst";
 }

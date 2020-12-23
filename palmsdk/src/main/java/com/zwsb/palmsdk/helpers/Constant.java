@@ -25,6 +25,8 @@ public class Constant {
         public static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
         public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
         public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE};
+
     }
 
     public static final CameraFacing DEFAULT_CAMERA = CameraFacing.FRONT;

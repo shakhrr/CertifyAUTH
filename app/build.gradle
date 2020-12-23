@@ -24,8 +24,8 @@ android {
         applicationId "com.certifyglobal.authenticator"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 67
-        versionName "2.7"
+        versionCode 66
+        versionName "2.6.9"  //released 2.7  app update need to rectify
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a'
         multiDexEnabled false
         lintOptions {

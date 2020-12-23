@@ -109,9 +109,12 @@ public class Utils {
 
     public static final class permission {
         public static final String[] camera = new String[]{android.Manifest.permission.CAMERA};
-        static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
-        public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+       public static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
+        public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE};
+        public static final String[] location = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+        public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE};
+
     }
 
     public static void QRCodeSender(String code, String userId, int companyId, JSONObjectCallback callback, Context context, String domainValue,String header) {
@@ -1219,6 +1222,33 @@ public class Utils {
         }
 
 
+    }
+    public static void gotoSetting(Context context) {
+        try {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            alertDialogBuilder.setTitle("Permission Needed");
+            alertDialogBuilder
+                    .setMessage("Go to App setting to enable permission")
+                    .setCancelable(false)
+                    .setPositiveButton("RETRY", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent();
+                            intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", context.getPackageName(), null);
+                            intent.setData(uri);
+                            context.startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }catch (Exception e){
+            Logger.error("PermissionActivity",e.getMessage());
+        }
     }
 
 }

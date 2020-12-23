@@ -142,6 +142,51 @@
 
             </LinearLayout>
             <TextView
+                android:id="@+id/permission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:paddingStart="@dimen/margin20"
+                android:paddingTop="25dp"
+                android:paddingBottom="@dimen/margin03"
+                android:text="@string/permission"
+                android:textColor="#a4a5a9"
+                android:textSize="@dimen/font_size3"
+                tools:ignore="RtlSymmetry" />
+            <LinearLayout
+                android:id="@+id/ll_permission"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin05"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/tv_permission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingStart="@dimen/margin16"
+                    android:text="@string/permission"
+                    android:textColor="#e41e1111"
+                    android:textSize="@dimen/font_size4"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/iv_back4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="150dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_right"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
+            <TextView
                 android:id="@+id/help"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package com.certifyglobal.authenticator;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -16,11 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -49,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            Logger.debug("mainnnnnnnnnnnnnnnnnnn","shkah");
             //noto2();
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
@@ -60,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
             mPopupMenu = new PopupMenu(this, imageMenu);
             mPopupMenu.getMenuInflater().inflate(R.menu.menu, mPopupMenu.getMenu());
             versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            Utils.PermissionRequest(MainActivity.this, Utils.permission.all);
+
+            if (!Utils.readFromPreferences(MainActivity.this, PreferencesKeys.permissionFirst, false))
+             Utils.PermissionRequest(MainActivity.this, Utils.permission.all);
+
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     Utils.keyValidations(this, this);
@@ -71,13 +77,21 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
             cardView_qr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanQR();
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ) {
+                        scanQR();
+                    }else{
+                        Utils.PermissionRequest(MainActivity.this, Utils.permission.camera_phone);
+                    }
                 }
             });
             imageAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanQR();
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                        scanQR();
+                    }else{
+                        Utils.PermissionRequest(MainActivity.this, Utils.permission.camera_phone);
+                    }
                 }
             });
             imageMenu.setOnClickListener(new View.OnClickListener() {
@@ -189,11 +203,7 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
     @Override
     protected void onResume() {
         super.onResume();
-       if (Utils.readFromPreferences(this, PreferencesKeys.updatePermissions, false)) {
-          /*  if (Utils.compareTowString(Utils.readFromPreferences(MainActivity.this, PreferencesKeys.whatNewVersion, "2.4"), versionCode)) {
-                Utils.saveToPreferences(MainActivity.this, PreferencesKeys.whatNewVersion, versionCode);
-                Utils.showAlertWhatsNew(this);
-            } else*/
+        if (Utils.readFromPreferences(this, PreferencesKeys.updatePermissions, false)) {
                 Utils.getOSDetails(this,this);
         }
     }
@@ -202,12 +212,50 @@ public class MainActivity extends AppCompatActivity implements JSONObjectCallbac
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
-          /*  Utils.saveToPreferences(this, PreferencesKeys.updatePermissions, true);
-            if (Utils.compareTowString(Utils.readFromPreferences(MainActivity.this, PreferencesKeys.whatNewVersion, "2.4"), versionCode)) {
-                Utils.saveToPreferences(MainActivity.this, PreferencesKeys.whatNewVersion, versionCode);
-                Utils.showAlertWhatsNew(this);
-            } else*/
-                Utils.getOSDetails(this,this);
+            Utils.saveToPreferences(this, PreferencesKeys.permissionFirst, true);
+            Utils.getOSDetails(this,this);
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+                if (permission.equals(Manifest.permission.READ_PHONE_STATE)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        Utils.saveToPreferences(this, PreferencesKeys.phone, true);
+                    } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        Utils.saveToPreferences(this, PreferencesKeys.phone, false);
+                    } else {
+                        Utils.saveToPreferences(this, PreferencesKeys.phone, false);
+                        Utils.gotoSetting(this);
+                    }
+                } else if (permission.equals(Manifest.permission.CAMERA)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        Utils.saveToPreferences(this, PreferencesKeys.camera, true);
+                    } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        Utils.saveToPreferences(this, PreferencesKeys.camera, false);
+                    } else {
+                        Utils.saveToPreferences(this, PreferencesKeys.camera, false);
+                        Utils.gotoSetting(this);
+                    }
+                } else if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        Utils.saveToPreferences(this, PreferencesKeys.location, true);
+                    } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        Utils.saveToPreferences(this, PreferencesKeys.location, false);
+                    } else {
+                        Utils.saveToPreferences(this, PreferencesKeys.location, false);
+                        Utils.gotoSetting(this);
+                    }
+                } else if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        Utils.saveToPreferences(this, PreferencesKeys.storage, true);
+                    } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        Utils.saveToPreferences(this, PreferencesKeys.storage, false);
+                    } else {
+                        Utils.saveToPreferences(this, PreferencesKeys.storage, false);
+                        Utils.gotoSetting(this);
+
+                    }
+                }
+            }
         }
     }
 

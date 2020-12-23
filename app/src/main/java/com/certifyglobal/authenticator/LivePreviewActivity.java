@@ -135,7 +135,7 @@ public final class LivePreviewActivity extends AppCompatActivity
                     break;
             }
 
-            if (!Utils.PermissionRequest(LivePreviewActivity.this, Utils.permission.all)) {
+            if (!Utils.PermissionRequest(LivePreviewActivity.this, Utils.permission.camera)) {
                 createCameraSource(selectedModel);
             } else {
                 getRuntimePermissions();
@@ -148,7 +148,6 @@ public final class LivePreviewActivity extends AppCompatActivity
     }
 
     private void faceSettingCall() {
-
         try {
             mTokenPersistence = new TokenPersistence(LivePreviewActivity.this);
 
@@ -190,7 +189,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         // parent.getItemAtPosition(pos)
         selectedModel = parent.getItemAtPosition(pos).toString();
         preview.stop();
-        if (!Utils.PermissionRequest(LivePreviewActivity.this, Utils.permission.all)) {
+        if (!Utils.PermissionRequest(LivePreviewActivity.this, Utils.permission.camera)) {
             createCameraSource(selectedModel);
             startCameraSource();
         } else {
@@ -326,12 +325,13 @@ public final class LivePreviewActivity extends AppCompatActivity
 
     private void getRuntimePermissions() {
         List<String> allNeededPermissions = new ArrayList<>();
-        for (String permission : getRequiredPermissions()) {
+        allNeededPermissions.add(android.Manifest.permission.CAMERA);
+       /* for (String permission : getRequiredPermissions()) {
             if (!isPermissionGranted(this, permission)) {
                 allNeededPermissions.add(permission);
             }
         }
-
+*/
         if (!allNeededPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(
                     this, allNeededPermissions.toArray(new String[0]), PERMISSION_REQUESTS);
@@ -378,7 +378,6 @@ public final class LivePreviewActivity extends AppCompatActivity
     @Override
     public void setActionImage(byte[] bytes) {
         try {
-
             Intent intent = new Intent(LivePreviewActivity.this, ImageActivity.class);
             intent.putExtra("pushType", pushType);
             intent.putExtra("user", user);

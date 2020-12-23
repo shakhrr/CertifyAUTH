@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.certifyglobal.utils.Logger;
@@ -21,7 +22,7 @@ import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.Utils;
 
 
-public class Settings extends MainActivity {
+public class Settings extends AppCompatActivity {
 
 
     SwitchCompat swithc_menu_lock;
@@ -40,6 +41,7 @@ public class Settings extends MainActivity {
             LinearLayout llPasscodes = findViewById(R.id.ll_passcodes);
             LinearLayout llapplock = findViewById(R.id.ll_applock);
             LinearLayout llRecover = findViewById(R.id.ll_recover);
+            LinearLayout ll_permission = findViewById(R.id.ll_permission);
             swithc_menu_lock = findViewById(R.id.swithc_menu_lock);
             ImageView img_ic_back=findViewById(R.id.img_ic_back);
             tvTitle.setText(getResources().getString(R.string.settings));
@@ -97,6 +99,12 @@ public class Settings extends MainActivity {
                         Utils.saveToPreferences(Settings.this,PreferencesKeys.appLock,false);
 
                     }
+                }
+            });
+            ll_permission.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Settings.this, PermissionActivity.class));
                 }
             });
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.certifyglobal.authenticator;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -10,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.JSONObjectCallbackImage;
@@ -258,9 +261,11 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                     else
                         tvTitle.setText(getResources().getString(R.string.face_login_request));
                     tvYes.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_face_auth, 0, 0);
+                    cameraPermission();
                     break;
                 case "3":
                 case "4":
+                    cameraPermission();
                     SharedPreferenceHelper.setLivenessCheck(this, SharedPreferenceHelper.LIVENESS_CHECK_KEY, true);
                     if (!authenticationBoolean) {
                         tvYes.setEnabled(false);
@@ -307,18 +312,22 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     Logger.toast(PushNotificationActivity.this, getResources().getString(R.string.lic_error));
                                     return;
                                 }
-                                Intent livePreIntent = new Intent(PushNotificationActivity.this, LivePreviewActivity.class);
-                                livePreIntent.putExtra("type", "Face");
-                                livePreIntent.putExtra("pushType", pushType);
-                                livePreIntent.putExtra("user", userName);
-                                livePreIntent.putExtra("requestId", requestId);
-                                livePreIntent.putExtra("userId", userId);
-                                livePreIntent.putExtra("faceSettings", faceSettings);
-                                livePreIntent.putExtra("correlationId", correlationId);
-                                livePreIntent.putExtra("version", version);
-                                //   livePreIntent.putExtra("userId", userId);
-                                startActivity(livePreIntent);
-                                finish();
+                                if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ) {
+                                    Intent livePreIntent = new Intent(PushNotificationActivity.this, LivePreviewActivity.class);
+                                    livePreIntent.putExtra("type", "Face");
+                                    livePreIntent.putExtra("pushType", pushType);
+                                    livePreIntent.putExtra("user", userName);
+                                    livePreIntent.putExtra("requestId", requestId);
+                                    livePreIntent.putExtra("userId", userId);
+                                    livePreIntent.putExtra("faceSettings", faceSettings);
+                                    livePreIntent.putExtra("correlationId", correlationId);
+                                    livePreIntent.putExtra("version", version);
+                                    //   livePreIntent.putExtra("userId", userId);
+                                    startActivity(livePreIntent);
+                                    finish();
+                                }else{
+                                    Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.camera_phone);
+                                }
                                 break;
                             case "3":
                             case "4":
@@ -367,6 +376,13 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
 
         } catch (Exception e) {
             Logger.error(TAG, e.getMessage());
+        }
+    }
+
+    private void cameraPermission() {
+        if (ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(PushNotificationActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ) {
+        }else{
+            Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.camera_phone);
         }
     }
 

@@ -314,7 +314,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                 }catch (Exception e){
                                     Logger.error(TAG,e.getMessage());
                                 }
-                            case "2":
+                            case "2"://face
                             case "5":
                                 if (authenticationBooleanError) {
                                     Logger.toast(PushNotificationActivity.this, getResources().getString(R.string.lic_error));
@@ -337,7 +337,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     Utils.PermissionRequest(PushNotificationActivity.this, Utils.permission.camera_phone);
                                 }
                                 break;
-                            case "3":
+                            case "3"://palm
                             case "4":
                                 if (authenticationBooleanError) {
                                     Logger.toast(PushNotificationActivity.this, getResources().getString(R.string.lic_error));

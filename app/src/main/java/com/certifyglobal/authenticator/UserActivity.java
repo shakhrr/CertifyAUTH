@@ -35,6 +35,7 @@ import com.certifyglobal.authenticator.facedetection.TokenAdapterRecycler;
 import com.certifyglobal.callback.Communicator;
 import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.PayloadObjectCallback;
+serimport com.certifyglobal.fcm.OnClearFromRecentService;
 import com.certifyglobal.fragment.BottomSheetDialog;
 import com.certifyglobal.utils.EndPoints;
 import com.certifyglobal.utils.Logger;
@@ -183,6 +184,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             imageMenu = findViewById(R.id.image_menu);
             llNotifications = findViewById(R.id.ll_notifications);
             tvCount = findViewById(R.id.tv_count_notification);
+            startService(new Intent(UserActivity.this, OnClearFromRecentService.class));
             if(Utils.readFromPreferences(this,PreferencesKeys.bottomSheet,true))
             openBottomDialog();
             llNotifications.setOnClickListener(new View.OnClickListener() {

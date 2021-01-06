@@ -109,6 +109,7 @@ public class PalmAPI {
             bw.write(Base64.encodeToString(data, Base64.DEFAULT));
             bw.close();
             Log.d(" deep PALM_LOG", "WRITE SUCCESS: " + Base64.encodeToString(data, Base64.DEFAULT));
+            Log.d(" deep PALM_LOG", "WRITE SUCCESS: decode " + Base64.decode(data, Base64.DEFAULT));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

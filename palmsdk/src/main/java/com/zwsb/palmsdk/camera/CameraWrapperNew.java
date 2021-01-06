@@ -340,7 +340,7 @@ public class CameraWrapperNew extends CameraWrapper {
                             System.out.println("modeling result");
                             byte[] modelResultData = ((PalmModelingResultMessage) message).data;
                             PalmAPI.saveModel(mContext, modelResultData, userName);
-                            System.out.println("deep result data"+modelResultData.toString());
+                            System.out.println("deep result camera new"+modelResultData);
                             EventBus.getDefault().post(CameraEvent.ON_SAVE_PALM_SUCCESS.setData(message));
                             break;
                         case LivenessResult:

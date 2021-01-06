@@ -64,9 +64,6 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             AppCenter.setEnabled(true);
-
-            startService(new Intent(SplashActivity.this, OnClearFromRecentService.class));
-
             setContentView(R.layout.activity_splash);
             //   ApplicationWrapper.getDBIFaceAdapter().deleteFace();
             //Device checking root or not

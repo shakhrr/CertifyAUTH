@@ -41,7 +41,6 @@ public class SharedPreferenceHelper {
         editor.putString(key, value);
         editor.apply();
     }
-
     public static void setStringArray(Context context, String key, ArrayList<String> array) {
         setSharedPreferenceString(context, key, new Gson().toJson(array, ArrayList.class));
     }
@@ -147,6 +146,12 @@ public class SharedPreferenceHelper {
 
     public static void setSavedPalmId(PalmModelID id, String key, String userName) {
         setSharedPreferenceString(PalmSDK.context, key + userName, new Gson().toJson(id, PalmModelID.class));
+    }
+    public static void setSavedPalmLeftData(String userName,String palmData) {
+        setSharedPreferenceString(PalmSDK.context, "left",palmData);
+    }
+    public static void setSavedPalmRightData(String userName,String palmData) {
+        setSharedPreferenceString(PalmSDK.context, "right",palmData);
     }
 
     public static PalmModelID getSavedPalmId(String key, String userName) {

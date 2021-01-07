@@ -31,8 +31,6 @@ import com.zwsb.palmsdk.palmApi.PalmAPI;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.logging.Logger;
-
 /**
  * Contains camera object, and manage textureView refresh events
  */
@@ -327,11 +325,11 @@ public class CameraWrapperOld extends CameraWrapper {
                              * Save new user data
                              */
                             case ModelingResult:
-
                                 System.out.println("modeling result");
                                 byte[] modelResultData = ((PalmModelingResultMessage) message).data;
                                 PalmAPI.saveModel(mContext, modelResultData, userName);
-                                System.out.println("deep old model"+modelResultData);
+                                System.out.println(modelResultData.toString());
+
                                 EventBus.getDefault().post(CameraEvent.ON_SAVE_PALM_SUCCESS.setData(message));
                                 break;
 

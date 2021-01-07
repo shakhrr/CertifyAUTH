@@ -18,6 +18,7 @@ import com.certifyglobal.utils.Utils;
 import com.zwsb.palmsdk.activities.AuthActivity;
 import com.zwsb.palmsdk.activities.PalmActivity;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
+import com.zwsb.palmsdk.palmApi.PalmAPI;
 
 import org.json.JSONObject;
 
@@ -33,6 +34,7 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
     private String palmType = "left";
     private String pushType;
     private String userId;
+    private String hostName;
     public static String defaultUserName = "AuthXUser";
     private Dialog dialog;
     private boolean statusBoolean;
@@ -58,6 +60,7 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
             requestId = intentGet.getStringExtra("requestId");
             correlationId = intentGet.getStringExtra("correlationId");
             userId = intentGet.getStringExtra("userId") == null ? "" : intentGet.getStringExtra("userId");
+            hostName=intentGet.getStringExtra("hostName");
             AuthActivity.timeStamp = intentGet.getStringExtra("timeStamp");
             AuthActivity.timeOut = intentGet.getIntExtra("timeOut", 0);
             if (pushType.equals("3"))//verfying
@@ -113,9 +116,10 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
                 dialog = Utils.showDialog(dialog, this);
                 if (dialog != null) dialog.show();
                 if (resultCode == AuthActivity.ON_SCAN_RESULT_OK || resultCode == NEW_USER_ACTION)
-                    Utils.PushAuthenticationStatus(pushType, statusBoolean = true, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
-                else
-                    Utils.PushAuthenticationStatus(pushType, statusBoolean = false, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
+                  //  Utils.PushAuthenticationStatus(pushType, statusBoolean = true, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
+                    Utils.palmEnroll(userName,PalmValidations.this,requestId,userId,pushType,this,correlationId,0,hostName);
+//                else
+//                    Utils.PushAuthenticationStatus(pushType, statusBoolean = false, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
             }
         } catch (Exception e) {
             Logger.error(TAG + "onActivityResult(int requestCode, int resultCode, Intent data)", e.getMessage());

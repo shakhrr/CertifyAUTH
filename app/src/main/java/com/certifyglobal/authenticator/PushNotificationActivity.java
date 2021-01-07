@@ -353,6 +353,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                     palmIntent.putExtra("timeStamp", timeStamp);
                                     palmIntent.putExtra("timeOut", timeOut);
                                     palmIntent.putExtra("correlationId", correlationId);
+                                    palmIntent.putExtra("hostName", hostName);
                                     startActivity(palmIntent);
                                     finish();
                                     break;

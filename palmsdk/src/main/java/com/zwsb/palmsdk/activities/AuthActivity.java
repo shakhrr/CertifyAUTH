@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -400,13 +401,15 @@ public class AuthActivity extends AppCompatActivity {
                 if (isRightPalm) {
                     SharedPreferenceHelper.setRightPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName);
+                    SharedPreferenceHelper.setSavedPalmRightData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.DEFAULT));
                     Log.d("deep right palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "RIGHT_PALM_ID_KEY"+ SharedPreferenceHelper.RIGHT_PALM_ID_KEY+ "username:"+userName);
                 } else {
                     SharedPreferenceHelper.setLeftPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName);
+                    SharedPreferenceHelper.setSavedPalmLeftData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.DEFAULT));
+
                     Log.d("deep left palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "LEFT_PALM_ID_KEY"+ SharedPreferenceHelper.LEFT_PALM_ID_KEY+ "username:"+userName);
                 }
-
                 finish();
         }
     }

@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -67,6 +68,7 @@ import com.innovatrics.iface.Face;
 import com.innovatrics.iface.IFace;
 import com.innovatrics.iface.enums.FaceAttributeId;
 import com.zwsb.palmsdk.PalmSDK;
+import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 
 
 import org.json.JSONArray;
@@ -101,6 +103,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import butterknife.ButterKnife;
+import okhttp3.internal.Util;
 
 public class Utils {
     private static final String LOG = "Utils - ";
@@ -371,6 +374,47 @@ public class Utils {
 
 
             new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, pushType.equals("2") ? EndPoints.pushFace : EndPoints.facePushVerify)).execute();
+
+        } catch (Exception e) {
+            Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());
+        }
+    }
+    public static void palmEnroll(String user,JSONObjectCallback callback, String requestId,String userId, String pushType, Context context,String corelationId,int deniedType,String hostName) {
+        try {
+
+
+            JSONObject obj = new JSONObject();
+            obj.put("request_id", requestId);
+            obj.put("CompanyId", "");
+            obj.put("user_id", userId);
+            obj.put("UserId", "");
+            obj.put("denied_type", deniedType);
+            obj.put("HostName", hostName);
+            obj.put("ApplicationId", "");
+            obj.put("push_type", pushType);
+            obj.put("device_data", MobileDetailsNew(context));
+            obj.put("authenitcate_hash", Utils.getHMacSecretKey(context));
+            obj.put("request_signature", RSAKeypair.signData(Utils.readFromPreferences(context, PreferencesKeys.deviceUUid, ""), requestId, Utils.readFromPreferences(context, PreferencesKeys.privateKey, "")));
+            obj.put("correlation_id", corelationId);
+            obj.put("public_key", Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
+            obj.put("push_token","");
+            obj.put("code_id", "");
+
+            JSONArray jsonArray=new JSONArray();
+            byte[]  modelLeftData= Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context,"left",""),Base64.DEFAULT);
+            byte[]  modelRightData= Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context,"right",""),Base64.DEFAULT);
+            JSONObject objpalmleft = new JSONObject();
+            JSONObject objpalmright = new JSONObject();
+            objpalmleft.put("Bio_index",0);//left
+            objpalmleft.put("Bio_Data",modelLeftData);
+            objpalmright.put("Bio_index",1);
+            objpalmright.put("Bio_Data",modelRightData);
+            jsonArray.put(objpalmleft);
+            jsonArray.put(objpalmright);
+            obj.put("palm_bio",jsonArray);
+
+
+            new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, pushType.equals("4") ? EndPoints.palmEnroll : EndPoints.palmVerify)).execute();
 
         } catch (Exception e) {
             Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());

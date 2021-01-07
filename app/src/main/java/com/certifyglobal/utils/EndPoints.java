@@ -58,5 +58,8 @@ public class EndPoints {
     public static String faceSetting = domainUrl+"getBioSettingsForMobile";
     public static final String companyImageUpdate = domainUrl + "getCompanyUpdates";
     public static final String LICENSE_FILE = "res/raw/iengine.lic"; public enum Mode {Prod, Local}
+    public static final String palmEnroll = domainUrl + "PalmPushEnroll";
+    public static final String palmVerify = domainUrl + "PalmPushVerify";
+
 
 }

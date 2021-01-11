@@ -2,8 +2,12 @@ package com.zwsb.palmsdk.palmApi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.redrockbiometrics.palm.PalmBiometrics;
 import com.redrockbiometrics.palm.PalmFrame;
@@ -11,19 +15,32 @@ import com.redrockbiometrics.palm.PalmImage;
 import com.redrockbiometrics.palm.PalmMessage;
 import com.redrockbiometrics.palm.PalmModelID;
 import com.redrockbiometrics.palm.PalmStatus;
+import com.zwsb.palmsdk.CryptoUtil;
+import com.zwsb.palmsdk.R;
 import com.zwsb.palmsdk.camera.CameraWrapper;
 import com.zwsb.palmsdk.helpers.BaseUtil;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Logger;
 
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -83,17 +100,37 @@ public class PalmAPI {
             while ((dataPiece = br.readLine()) != null) {
                 dataString.append(dataPiece);
             }
-
-            //return CryptoUtil.decrypt(ret);
-            Log.d(" deep PALM_LOG", "READED: " + dataString);
             return Base64.decode(dataString.toString(), Base64.DEFAULT);
+          //  return dataString.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+     //   return new byte[0];
         return new byte[0];
+    }
+
+    public static String loadModelString(Context context, String filename) {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(context.openFileInput(filename)));
+            StringBuffer dataString = new StringBuffer();
+            String dataPiece;
+            while ((dataPiece = br.readLine()) != null) {
+                dataString.append(dataPiece);
+            }
+
+            //return CryptoUtil.decrypt(ret);
+
+            return dataString.toString();
+            //  return dataString.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -103,12 +140,11 @@ public class PalmAPI {
      */
     public static void saveModel(Context context, byte[] data, String userName) {
         //byte[] encryptedData = CryptoUtil.encrypt(data);
-
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(BaseUtil.USER_GESTURE_PATH + BaseUtil.CURRENT_PALM_PATH + userName, MODE_PRIVATE)));
-            bw.write(Base64.encodeToString(data, Base64.DEFAULT));
+            bw.write(Base64.encodeToString(data, Base64.NO_WRAP));
             bw.close();
-            Log.d(" deep PALM_LOG", "WRITE SUCCESS: " + Base64.encodeToString(data, Base64.DEFAULT));
+            System.out.println("deep save model" + Base64.encodeToString(data, Base64.NO_WRAP));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -199,30 +235,27 @@ public class PalmAPI {
             byte[] modelLeftData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + userName);
             byte[] modelRightData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + userName);
 
+            System.out.println("deep testmatch"+modelLeftData);
+
             PalmModelID[] modelID = new PalmModelID[2];
             modelID[0] = new PalmModelID();
             modelID[1] = new PalmModelID();
 
             m_PalmBiometrics.LoadModel(modelLeftData, modelID[0]);
             m_PalmBiometrics.LoadModel(modelRightData, modelID[1]);
-            Log.i("PalmIDLog", "add model id " + byteArrayToHex(modelID[0].id) + " AND SECOND PALM " + byteArrayToHex(modelID[1].id));
-
             m_PalmBiometrics.AddModel(modelID[0]);
             m_PalmBiometrics.AddModel(modelID[1]);
 
             status = m_PalmBiometrics.Match(modelID);
-            Log.d("deep leftright", String.valueOf(status));
         } else if (isLeftPalmEnabled) {
             byte[] modelLeftData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + userName);
             PalmModelID[] modelID = new PalmModelID[1];
             modelID[0] = new PalmModelID();
 
             m_PalmBiometrics.LoadModel(modelLeftData, modelID[0]);
-            Log.i("PalmIDLog", "add model id " + byteArrayToHex(modelID[0].id));
 
             m_PalmBiometrics.AddModel(modelID[0]);
             status = m_PalmBiometrics.Match(modelID);
-            Log.d("deep left", String.valueOf(status));
 
         } else if (isRightPalmEnabled) {
             byte[] modelRightData = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + userName);
@@ -232,8 +265,6 @@ public class PalmAPI {
             m_PalmBiometrics.LoadModel(modelRightData, modelID[0]);
             m_PalmBiometrics.AddModel(modelID[0]);
             status = m_PalmBiometrics.Match(modelID);
-            Log.d("deep right", String.valueOf(status));
-
         }
        // Log.i("PalmIDLog", "status " + status );
         if (null != status && status != PalmStatus.Success) {

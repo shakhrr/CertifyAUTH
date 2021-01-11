@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.TextureView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 
 import com.redrockbiometrics.palm.PalmFrame;
@@ -22,6 +25,7 @@ import com.redrockbiometrics.palm.PalmModelingResultMessage;
 import com.redrockbiometrics.palm.PalmQuad;
 import com.redrockbiometrics.palm.PalmStatus;
 import com.redrockbiometrics.palm.PalmsDetectedMessage;
+import com.zwsb.palmsdk.CryptoUtil;
 import com.zwsb.palmsdk.R;
 import com.zwsb.palmsdk.customViews.ScanView;
 import com.zwsb.palmsdk.helpers.BaseUtil;
@@ -30,7 +34,6 @@ import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 import com.zwsb.palmsdk.palmApi.PalmAPI;
 
 import org.greenrobot.eventbus.EventBus;
-
 /**
  * Contains camera object, and manage textureView refresh events
  */
@@ -45,7 +48,6 @@ public class CameraWrapperOld extends CameraWrapper {
         this.textureView = surface;
         this.scanView = view;
         this.userName = userName;
-
         surface.setSurfaceTextureListener(this);
     }
 
@@ -238,6 +240,7 @@ public class CameraWrapperOld extends CameraWrapper {
      * Handler for process PalmMessage on UI Thread
      */
     Handler palmMessageHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public boolean handleMessage(Message msg) {
             PalmMessage message = (PalmMessage) msg.obj;
@@ -297,7 +300,6 @@ public class CameraWrapperOld extends CameraWrapper {
                                 boolean isMatch = matchResult.result;
                                 float score = matchResult.score;
                                 Log.d("deep", "deep Matching result old:" + isMatch + "  Score:" + score);
-
                                 atleastOneMatched = isMatch || atleastOneMatched;
                                 bestMatchScore = Math.max(bestMatchScore, score);
                                 if (++counter == SharedPreferenceHelper.getNumberOfRegisteredPalms(mContext, userName)) {
@@ -325,14 +327,10 @@ public class CameraWrapperOld extends CameraWrapper {
                              * Save new user data
                              */
                             case ModelingResult:
-                                System.out.println("modeling result");
                                 byte[] modelResultData = ((PalmModelingResultMessage) message).data;
                                 PalmAPI.saveModel(mContext, modelResultData, userName);
-                                System.out.println(modelResultData.toString());
-
                                 EventBus.getDefault().post(CameraEvent.ON_SAVE_PALM_SUCCESS.setData(message));
                                 break;
-
                             case LivenessResult:
                                 EventBus.getDefault().post(CameraEvent.ON_LIVENESS_CHECK_RESULT.setData(message));
                                 break;
@@ -351,7 +349,7 @@ public class CameraWrapperOld extends CameraWrapper {
                     }
                 }
             } catch (Exception ignore) {
-
+                ignore.printStackTrace();
             }
             return true;
         }
@@ -365,4 +363,5 @@ public class CameraWrapperOld extends CameraWrapper {
             return true;
         }
     });
+
 }

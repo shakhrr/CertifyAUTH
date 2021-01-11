@@ -2,6 +2,7 @@ package com.zwsb.palmsdk.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import com.zwsb.palmsdk.palmApi.PalmAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -401,14 +403,11 @@ public class AuthActivity extends AppCompatActivity {
                 if (isRightPalm) {
                     SharedPreferenceHelper.setRightPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName);
-                    SharedPreferenceHelper.setSavedPalmRightData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.DEFAULT));
-                    Log.d("deep right palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "RIGHT_PALM_ID_KEY"+ SharedPreferenceHelper.RIGHT_PALM_ID_KEY+ "username:"+userName);
+                    SharedPreferenceHelper.setSavedPalmRightData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.NO_WRAP));
                 } else {
                     SharedPreferenceHelper.setLeftPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName);
-                    SharedPreferenceHelper.setSavedPalmLeftData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.DEFAULT));
-
-                    Log.d("deep left palm key","model idd:"+  ((PalmModelingResultMessage) event.message).modelID+ "LEFT_PALM_ID_KEY"+ SharedPreferenceHelper.LEFT_PALM_ID_KEY+ "username:"+userName);
+                    SharedPreferenceHelper.setSavedPalmLeftData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.NO_WRAP));
                 }
                 finish();
         }

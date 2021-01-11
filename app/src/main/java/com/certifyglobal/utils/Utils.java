@@ -21,12 +21,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricConstants;
@@ -50,6 +54,7 @@ import com.certifyglobal.async_task.AsyncJSONObjectSender;
 import com.certifyglobal.async_task.AsyncJSONObjectSenderSetting;
 import com.certifyglobal.authenticator.ApplicationWrapper;
 import com.certifyglobal.authenticator.MainActivity;
+import com.certifyglobal.authenticator.PalmValidations;
 import com.certifyglobal.authenticator.PermissionActivity;
 import com.certifyglobal.authenticator.PushNotificationActivity;
 import com.certifyglobal.authenticator.R;
@@ -68,20 +73,25 @@ import com.innovatrics.iface.Face;
 import com.innovatrics.iface.IFace;
 import com.innovatrics.iface.enums.FaceAttributeId;
 import com.zwsb.palmsdk.PalmSDK;
+import com.zwsb.palmsdk.helpers.BaseUtil;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -103,7 +113,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import butterknife.ButterKnife;
-import okhttp3.internal.Util;
+import static com.zwsb.palmsdk.palmApi.PalmAPI.loadModel;
+import static com.zwsb.palmsdk.palmApi.PalmAPI.loadModelString;
 
 public class Utils {
     private static final String LOG = "Utils - ";
@@ -111,13 +122,12 @@ public class Utils {
     private static BiometricPrompt biometricPrompt;
     private static BiometricPrompt.PromptInfo promptInfo;
 
-
     public static final class permission {
         public static final String[] camera = new String[]{android.Manifest.permission.CAMERA};
        public static final String[] phone = new String[]{android.Manifest.permission.READ_PHONE_STATE};
         public static final String[] storage = new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE};
         public static final String[] location = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
-        public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+        public static final String[] all = new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.READ_EXTERNAL_STORAGE};
         public static final String[] camera_phone = new String[]{android.Manifest.permission.CAMERA,android.Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
 
     }
@@ -337,18 +347,6 @@ public class Utils {
             Logger.error(LOG + "PushAuthenticationStatus(String userEmail, boolean isAuthenticated, JSONObjectCallback callback, String requestId)", e.getMessage());
         }
     }
-    public static byte[] getByteArray(JSONArray jsonArray) {
-        byte[] byteArrayJson = new byte[jsonArray.length()];
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                byteArrayJson[i] = (byte) ((int) jsonArray.get(i) & 0xFF);
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return byteArrayJson;
-    }
-
     // face Enrolling image send
     public static void PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId,String userId, String pushType, Context context,String corelationId) {
         try {
@@ -379,45 +377,64 @@ public class Utils {
             Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());
         }
     }
-    public static void palmEnroll(String user,JSONObjectCallback callback, String requestId,String userId, String pushType, Context context,String corelationId,int deniedType,String hostName) {
+
+    public static void palmEnroll(String user, JSONObjectCallback callback, String requestId, String userId, String pushType, Context context, String corelationId, int deniedType, String hostName) {
         try {
+            String modelLeftData = loadModelString(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + PalmValidations.defaultUserName);
+            String modelRightData = loadModelString(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + PalmValidations.defaultUserName);
 
 
-            JSONObject obj = new JSONObject();
-            obj.put("request_id", requestId);
-            obj.put("CompanyId", "");
-            obj.put("user_id", userId);
-            obj.put("UserId", "");
-            obj.put("denied_type", deniedType);
-            obj.put("HostName", hostName);
-            obj.put("ApplicationId", "");
-            obj.put("push_type", pushType);
-            obj.put("device_data", MobileDetailsNew(context));
-            obj.put("authenitcate_hash", Utils.getHMacSecretKey(context));
-            obj.put("request_signature", RSAKeypair.signData(Utils.readFromPreferences(context, PreferencesKeys.deviceUUid, ""), requestId, Utils.readFromPreferences(context, PreferencesKeys.privateKey, "")));
-            obj.put("correlation_id", corelationId);
-            obj.put("public_key", Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
-            obj.put("push_token","");
-            obj.put("code_id", "");
+                        JSONObject obj = new JSONObject();
+                        obj.put("request_id", requestId);
+                        obj.put("user_id", userId);
+                        obj.put("push_type", pushType);
+                        obj.put("device_data", MobileDetailsNew(context));
+                        obj.put("authenitcate_hash", Utils.getHMacSecretKey(context));
+                        obj.put("request_signature", RSAKeypair.signData(Utils.readFromPreferences(context, PreferencesKeys.deviceUUid, ""), requestId, Utils.readFromPreferences(context, PreferencesKeys.privateKey, "")));
+                        obj.put("correlation_id", corelationId);
+                        obj.put("public_key", Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
 
-            JSONArray jsonArray=new JSONArray();
-            byte[]  modelLeftData= Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context,"left",""),Base64.DEFAULT);
-            byte[]  modelRightData= Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context,"right",""),Base64.DEFAULT);
-            JSONObject objpalmleft = new JSONObject();
-            JSONObject objpalmright = new JSONObject();
-            objpalmleft.put("Bio_index",0);//left
-            objpalmleft.put("Bio_Data",modelLeftData);
-            objpalmright.put("Bio_index",1);
-            objpalmright.put("Bio_Data",modelRightData);
-            jsonArray.put(objpalmleft);
-            jsonArray.put(objpalmright);
-            obj.put("palm_bio",jsonArray);
+                        if (pushType.equals("4")) {
+                            JSONArray jsonArray = new JSONArray();
 
-
-            new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, pushType.equals("4") ? EndPoints.palmEnroll : EndPoints.palmVerify)).execute();
+                            JSONObject objpalmleft = new JSONObject();
+                            JSONObject objpalmright = new JSONObject();
+                            objpalmleft.put("Bio_index", 0);//left
+                            objpalmleft.put("Bio_Data",modelLeftData);
+                            objpalmright.put("Bio_index", 1);
+                            objpalmright.put("Bio_Data",modelRightData);
+                            jsonArray.put(objpalmleft);
+                            jsonArray.put(objpalmright);
+                            obj.put("palm_bio", jsonArray);
+                        } else {
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject = new JSONObject();
+                               jsonObject.put("BioDATA",modelLeftData);
+                            jsonArray.put(jsonObject);
+                            obj.put("palm_bio", jsonArray);
+                        }
+                        new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, pushType.equals("4") ? EndPoints.palmEnroll : EndPoints.palmVerify)).execute();
+                          log(obj.toString());
 
         } catch (Exception e) {
             Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());
+        }
+    }
+
+    private static void log(String log) {
+        String requestStr = log;
+        if (requestStr.length() > 4000) {
+            int chunkCount = requestStr.length() / 4000;     // integer division
+            for (int i = 0; i <= chunkCount; i++) {
+                int max = 4000 * (i + 1);
+                if (max >= requestStr.length()) {
+                    Log.d("deep Requestor", "Deep chunk " + i + " of " + chunkCount + ":" + requestStr.substring(4000 * i));
+                } else {
+                    Log.d(" deep Requestor", "Deep chunk " + i + " of " + chunkCount + ":" + requestStr.substring(4000 * i, max));
+                }
+            }
+        } else {
+            Log.d("deep Requestor", "Deep Request Str" + requestStr.toString());
         }
     }
 

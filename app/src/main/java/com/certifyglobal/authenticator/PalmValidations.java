@@ -2,8 +2,10 @@ package com.certifyglobal.authenticator;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -18,12 +20,8 @@ import com.certifyglobal.utils.Utils;
 import com.zwsb.palmsdk.activities.AuthActivity;
 import com.zwsb.palmsdk.activities.PalmActivity;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
-import com.zwsb.palmsdk.palmApi.PalmAPI;
-
 import org.json.JSONObject;
-
 import butterknife.ButterKnife;
-
 import static com.zwsb.palmsdk.activities.AuthActivity.NEW_USER_ACTION;
 
 public class PalmValidations extends AppCompatActivity implements JSONObjectCallback {
@@ -116,10 +114,12 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
                 dialog = Utils.showDialog(dialog, this);
                 if (dialog != null) dialog.show();
                 if (resultCode == AuthActivity.ON_SCAN_RESULT_OK || resultCode == NEW_USER_ACTION)
-                  //  Utils.PushAuthenticationStatus(pushType, statusBoolean = true, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
-                    Utils.palmEnroll(userName,PalmValidations.this,requestId,userId,pushType,this,correlationId,0,hostName);
-//                else
-//                    Utils.PushAuthenticationStatus(pushType, statusBoolean = false, PalmValidations.this, requestId, userId, this, 0, true,correlationId);
+//                    byte[] modelLeftData = Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context, "left", ""), Base64.NO_WRAP);
+//                    byte[] modelRightData = Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context, "right", ""), Base64.NO_WRAP);
+                   //   new AsyncGetCheckRoot().execute();
+                Utils.palmEnroll(userName,PalmValidations.this,requestId,userId,pushType,PalmValidations.this,correlationId,0,hostName);
+
+
             }
         } catch (Exception e) {
             Logger.error(TAG + "onActivityResult(int requestCode, int resultCode, Intent data)", e.getMessage());
@@ -139,20 +139,16 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
             }
             if (!report.isNull("ExceptionMessage")) {
                 Logger.toast(PalmValidations.this, report.getString("ExceptionMessage"));
-                statusBoolean = false;
+               // statusBoolean = false;
             } else if (!report.isNull("response_text")) {
                 Logger.toast(PalmValidations.this, report.getString("response_text"));
-                statusBoolean = false;
+              //  statusBoolean = false;
             }
             String requestIdServer = report.isNull("request_id") ? "" : report.getString("request_id");
-            if (requestId.equals(requestIdServer)) {
-                if (statusBoolean) {
+            if (report.getString("response_code").equals("1")) {
                     llMessage.setBackgroundColor(getResources().getColor(R.color.green));
                     tvMessage.setText(pushType.equals("3") ? getResources().getString(R.string.authenticated) : getResources().getString(R.string.enrollment_successful));
                     tvMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_approve, 0, 0);
-                } else {
-                    SetFailed(getResources().getString(R.string.denied));
-                }
             } else {
                 SetFailed(getResources().getString(R.string.failed));
             }

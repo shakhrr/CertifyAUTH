@@ -110,7 +110,7 @@
         android:padding="@dimen/margin05"
         android:background="@color/white"
         android:layout_marginTop="@dimen/margin10"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/img_storage"

@@ -154,6 +154,10 @@ public class SharedPreferenceHelper {
         setSharedPreferenceString(PalmSDK.context, "right",palmData);
     }
 
+    public static void savePalmPath(String userName,String palmData) {
+        setSharedPreferenceString(PalmSDK.context, "path",palmData);
+    }
+
     public static PalmModelID getSavedPalmId(String key, String userName) {
         String json = getSharedPreferenceString(PalmSDK.context, key + userName, "");
 

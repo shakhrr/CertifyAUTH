@@ -328,6 +328,7 @@ public class AuthActivity extends AppCompatActivity {
                 infoLayout.setVisibility(View.GONE);
                 closeButton.setVisibility(View.GONE);
                 palmTextView.setText("");
+                BaseUtil.CURRENT_PALM_PATH="";
 
                 new Thread() {
                     @Override
@@ -344,6 +345,7 @@ public class AuthActivity extends AppCompatActivity {
                 infoLayout.setVisibility(View.GONE);
                 closeButton.setVisibility(View.GONE);
                 palmTextView.setText("");
+                BaseUtil.CURRENT_PALM_PATH="";
 
                 new Thread() {
                     @Override
@@ -399,15 +401,12 @@ public class AuthActivity extends AppCompatActivity {
 
             case ON_SAVE_PALM_SUCCESS:
                 scanView.reDrawGesture(0, 0, 0);
-
                 if (isRightPalm) {
                     SharedPreferenceHelper.setRightPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName);
-                    SharedPreferenceHelper.setSavedPalmRightData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.NO_WRAP));
                 } else {
                     SharedPreferenceHelper.setLeftPalmEnabled(AuthActivity.this, true, userName);
                     SharedPreferenceHelper.setSavedPalmId(((PalmModelingResultMessage) event.message).modelID, SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName);
-                    SharedPreferenceHelper.setSavedPalmLeftData(userName, Base64.encodeToString(((PalmModelingResultMessage) event.message).data,Base64.NO_WRAP));
                 }
                 finish();
         }

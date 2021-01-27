@@ -267,7 +267,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             Logger.error(LAG + "onCreate(Bundle savedInstanceState)", e.getMessage());
         }
     }
-
     private void openBottomDialog() {
         KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         try {

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +27,15 @@ import com.zwsb.palmsdk.helpers.BaseUtil;
 import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 import com.zwsb.palmsdk.palmApi.PalmAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 
 public class PalmActivity extends AppCompatActivity {
@@ -236,7 +240,7 @@ public class PalmActivity extends AppCompatActivity {
             } else {
                 PalmAPI.m_PalmBiometrics.ExtractModelMask(SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName));
             }
-          Log.d("deep async",SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName) + "right key :"+SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName));
+         System.out.println("deep right key"+SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.RIGHT_PALM_ID_KEY, userName) + "left key :"+SharedPreferenceHelper.getSavedPalmId(SharedPreferenceHelper.LEFT_PALM_ID_KEY, userName));
         }
 
         @Override
@@ -246,7 +250,7 @@ public class PalmActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
         }
 
-        private Bitmap getBitmap(PalmImage image) {
+        public  Bitmap getBitmap(PalmImage image) {
             Bitmap img = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888);
             byte[] data = image.data;
             int i = 0;
@@ -259,7 +263,6 @@ public class PalmActivity extends AppCompatActivity {
                     img.setPixel(x, y, rgb);
                 }
             }
-              Log.d("deep logg","bitmap");
             return img;
         }
     }

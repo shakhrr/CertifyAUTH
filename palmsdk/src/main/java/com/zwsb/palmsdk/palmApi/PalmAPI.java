@@ -100,7 +100,7 @@ public class PalmAPI {
             while ((dataPiece = br.readLine()) != null) {
                 dataString.append(dataPiece);
             }
-            return Base64.decode(dataString.toString(), Base64.DEFAULT);
+            return Base64.decode(dataString.toString(), Base64.NO_WRAP);
           //  return dataString.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -139,15 +139,17 @@ public class PalmAPI {
      * @param data
      */
     public static void saveModel(Context context, byte[] data, String userName) {
-        //byte[] encryptedData = CryptoUtil.encrypt(data);
+      //  byte[] encryptedData = CryptoUtil.encrypt(data);
         try {
+            System.out.println("deep pathhhhhh" + BaseUtil.USER_GESTURE_PATH + BaseUtil.CURRENT_PALM_PATH + userName);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(BaseUtil.USER_GESTURE_PATH + BaseUtil.CURRENT_PALM_PATH + userName, MODE_PRIVATE)));
             bw.write(Base64.encodeToString(data, Base64.NO_WRAP));
             bw.close();
-            System.out.println("deep save model" + Base64.encodeToString(data, Base64.NO_WRAP));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }catch (IllegalArgumentException e){
             e.printStackTrace();
         }
     }

@@ -114,12 +114,7 @@ public class PalmValidations extends AppCompatActivity implements JSONObjectCall
                 dialog = Utils.showDialog(dialog, this);
                 if (dialog != null) dialog.show();
                 if (resultCode == AuthActivity.ON_SCAN_RESULT_OK || resultCode == NEW_USER_ACTION)
-//                    byte[] modelLeftData = Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context, "left", ""), Base64.NO_WRAP);
-//                    byte[] modelRightData = Base64.decode(SharedPreferenceHelper.getSharedPreferenceString(context, "right", ""), Base64.NO_WRAP);
-                   //   new AsyncGetCheckRoot().execute();
                 Utils.palmEnroll(userName,PalmValidations.this,requestId,userId,pushType,PalmValidations.this,correlationId,0,hostName);
-
-
             }
         } catch (Exception e) {
             Logger.error(TAG + "onActivityResult(int requestCode, int resultCode, Intent data)", e.getMessage());

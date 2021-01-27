@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.redrockbiometrics.palm.PalmModelID;
+import com.redrockbiometrics.palm.PalmModelingResultMessage;
 import com.zwsb.palmsdk.PalmSDK;
 
 import java.util.ArrayList;
@@ -146,20 +147,13 @@ public class SharedPreferenceHelper {
 
     public static void setSavedPalmId(PalmModelID id, String key, String userName) {
         setSharedPreferenceString(PalmSDK.context, key + userName, new Gson().toJson(id, PalmModelID.class));
-    }
-    public static void setSavedPalmLeftData(String userName,String palmData) {
-        setSharedPreferenceString(PalmSDK.context, "left",palmData);
-    }
-    public static void setSavedPalmRightData(String userName,String palmData) {
-        setSharedPreferenceString(PalmSDK.context, "right",palmData);
-    }
 
-    public static void savePalmPath(String userName,String palmData) {
-        setSharedPreferenceString(PalmSDK.context, "path",palmData);
     }
 
     public static PalmModelID getSavedPalmId(String key, String userName) {
         String json = getSharedPreferenceString(PalmSDK.context, key + userName, "");
+
+        System.out.println("deep palmmodelID"+ json);
 
         if (!json.isEmpty()) {
             return new Gson().fromJson(json, PalmModelID.class);

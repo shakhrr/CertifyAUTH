@@ -13,14 +13,17 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.TextureView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 
+import com.redrockbiometrics.palm.PalmDetected;
 import com.redrockbiometrics.palm.PalmFrame;
 import com.redrockbiometrics.palm.PalmMatchingResultMessage;
 import com.redrockbiometrics.palm.PalmMessage;
 import com.redrockbiometrics.palm.PalmMessageEnum;
+import com.redrockbiometrics.palm.PalmModelID;
 import com.redrockbiometrics.palm.PalmModelingResultMessage;
 import com.redrockbiometrics.palm.PalmQuad;
 import com.redrockbiometrics.palm.PalmStatus;
@@ -34,6 +37,9 @@ import com.zwsb.palmsdk.helpers.SharedPreferenceHelper;
 import com.zwsb.palmsdk.palmApi.PalmAPI;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.logging.Logger;
+
 /**
  * Contains camera object, and manage textureView refresh events
  */
@@ -223,14 +229,13 @@ public class CameraWrapperOld extends CameraWrapper {
             if (message == null) {
                 Message resultMessage = palmMessageHandler.obtainMessage();
                 resultMessage.obj = new PalmMessage(PalmMessageEnum.None);
-                palmMessageHandler.sendMessage(resultMessage);
+                   palmMessageHandler.sendMessage(resultMessage);
             } else {
                 while (message != null) {
                     Message resultMessage = palmMessageHandler.obtainMessage();
                     resultMessage.obj = message;
-                    palmMessageHandler.sendMessage(resultMessage);
-
-                    message = PalmAPI.m_PalmBiometrics.WaitMessage();
+                        palmMessageHandler.sendMessage(resultMessage);
+                        message = PalmAPI.m_PalmBiometrics.WaitMessage();
                 }
             }
         }
@@ -262,6 +267,8 @@ public class CameraWrapperOld extends CameraWrapper {
                                 break;
                             case PalmsDetected:
                                 PalmQuad quad = ((PalmsDetectedMessage) message).palms[0].quad;
+                                float palmQuality=((PalmsDetectedMessage) message).palms[0].quality;
+                                System.out.println("deep palm quality"+palmQuality);
 
                                 float newCenterX = (quad.cx + quad.ax) / 2;
                                 float newCenterY = (quad.cy + quad.ay) / 2;
@@ -308,7 +315,6 @@ public class CameraWrapperOld extends CameraWrapper {
                                         e.score = bestMatchScore;
                                         EventBus.getDefault().post(e);
                                         Log.d("deep score success old",""+bestMatchScore);
-
                                     } else {
                                         CameraEvent e = CameraEvent.ON_SCAN_FAILURE;
                                         e.score = bestMatchScore;

@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -382,8 +384,44 @@ public class Utils {
         try {
             String modelLeftData = loadModelString(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + PalmValidations.defaultUserName);
             String modelRightData = loadModelString(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + PalmValidations.defaultUserName);
+            String palmVerify = loadModelString(context, BaseUtil.USER_GESTURE_PATH + PalmValidations.defaultUserName);
+
+            System.out.println("deep utilverify" + BaseUtil.USER_GESTURE_PATH + PalmValidations.defaultUserName);
+            System.out.println("deep utilright" + BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + PalmValidations.defaultUserName);
+            System.out.println("deep utilleft" + BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + PalmValidations.defaultUserName);
 
 
+
+    /*      byte[] modelRightDatabyte = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.RIGHT_PALM_PATH + PalmValidations.defaultUserName);
+            byte[] modelLeftDatabyte = loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.LEFT_PALM_PATH + PalmValidations.defaultUserName);
+            byte[] modelVerify =  loadModel(context, BaseUtil.USER_GESTURE_PATH + BaseUtil.CURRENT_PALM_PATH + PalmValidations.defaultUserName);
+
+
+            JSONArray byteArrayJsonright = new JSONArray();
+            if (modelRightDatabyte != null) {
+                for (byte b : modelRightDatabyte) {
+                    int val = b & 0xFF;
+                    byteArrayJsonright.put(val);
+
+                }
+            }
+            JSONArray byteArrayJsonleft = new JSONArray();
+            if (modelLeftDatabyte != null) {
+                for (byte b : modelLeftDatabyte) {
+                    int val = b & 0xFF;
+                    byteArrayJsonleft.put(val);
+
+                }
+            }
+            JSONArray byteArrayJsonverify = new JSONArray();
+            if (modelVerify != null) {
+                for (byte b : modelVerify) {
+                    int val = b & 0xFF;
+                    byteArrayJsonverify.put(val);
+
+                }
+            }
+*/
                         JSONObject obj = new JSONObject();
                         obj.put("request_id", requestId);
                         obj.put("user_id", userId);
@@ -400,27 +438,26 @@ public class Utils {
                             JSONObject objpalmleft = new JSONObject();
                             JSONObject objpalmright = new JSONObject();
                             objpalmleft.put("Bio_index", 0);//left
-                            objpalmleft.put("Bio_Data",modelLeftData);
+                            objpalmleft.put("BioData",modelLeftData);
                             objpalmright.put("Bio_index", 1);
-                            objpalmright.put("Bio_Data",modelRightData);
+                            objpalmright.put("BioData",modelRightData);
                             jsonArray.put(objpalmleft);
                             jsonArray.put(objpalmright);
                             obj.put("palm_bio", jsonArray);
                         } else {
                             JSONArray jsonArray = new JSONArray();
                             JSONObject jsonObject = new JSONObject();
-                               jsonObject.put("BioDATA",modelLeftData);
+                            jsonObject.put("BioData",palmVerify);
                             jsonArray.put(jsonObject);
                             obj.put("palm_bio", jsonArray);
                         }
                         new AsyncJSONObjectSender(obj, callback, ApplicationWrapper.BaseUrl(PushNotificationActivity.hostName, pushType.equals("4") ? EndPoints.palmEnroll : EndPoints.palmVerify)).execute();
-                          log(obj.toString());
+                       //   log(obj.toString());
 
         } catch (Exception e) {
             Logger.error(LOG + "PushFace(String userName, byte[] byteArray, JSONObjectCallback callback, String requestId, String userId, String pushType)", e.getMessage());
         }
     }
-
     private static void log(String log) {
         String requestStr = log;
         if (requestStr.length() > 4000) {

@@ -185,7 +185,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                             isExist = true;
                             try {
                                 if ((!userVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.userVersion, ""))) || !SettingVersion.equals(Utils.readFromPreferences(PushNotificationActivity.this, PreferencesKeys.imageVersion, ""))) {
-                                    String label = String.format("%s|%s|%s|0|%s|%s", companyName, userName, role, userId, hostName);
+                                    String label = String.format("%s|%s|%s|0|%s|%s|%s", companyName, userName, role, userId, hostName,"true");
                                     oldtemp = String.format("otpauth://totp/%s:%s?secret=%s&digits=6&period=30", tokenTemp.getIssuer(), label, tokenTemp.getSecret());
                                     addTokenAndFinish(oldtemp, position);
                                     Utils.saveToPreferences(PushNotificationActivity.this, PreferencesKeys.userVersion, userVersion);
@@ -207,7 +207,7 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
                                 String companyName = labelU.length >= 1 ? labelU[0] : "";
                                 String userName = labelU.length >= 2 ? labelU[1] : "";
                                 String role = labelU.length >= 3 ? labelU[2] : "";
-                                String label = String.format("%s|%s|%s|0|%s|%s", companyName, userName, role, userId, hostName);
+                                String label = String.format("%s|%s|%s|0|%s|%s|%s", companyName, userName, role, userId, hostName,"true");
                                 temp = String.format("otpauth://totp/%s:%s?secret=%s&digits=6&period=30", tokenTemp.getIssuer(), label, tokenTemp.getSecret());
                                 Logger.debug("mTokenPersistencenewwwwwww", temp);
                                 Logger.debug("mTokenPersistenceoldddddddddddd", tokenTemp.toString());
@@ -666,7 +666,6 @@ public class PushNotificationActivity extends AppCompatActivity implements JSONO
             try {
                 String formatedString = report.substring(1, report.length() - 1);
                 json1 = new JSONObject(formatedString.replace("\\",""));
-
             }catch (Exception e){
                 e.printStackTrace();
                 json1 = new JSONObject(report);

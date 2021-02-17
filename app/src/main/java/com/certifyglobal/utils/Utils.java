@@ -52,6 +52,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.certifyglobal.async_task.AsyncJSONObjectHeader;
 import com.certifyglobal.async_task.AsyncJSONObjectImageUpdate;
+import com.certifyglobal.async_task.AsyncJSONObjectReconnect;
 import com.certifyglobal.async_task.AsyncJSONObjectSender;
 import com.certifyglobal.async_task.AsyncJSONObjectSenderSetting;
 import com.certifyglobal.authenticator.ApplicationWrapper;
@@ -65,6 +66,7 @@ import com.certifyglobal.authenticator.UserActivity;
 import com.certifyglobal.callback.Communicator;
 import com.certifyglobal.callback.JSONObjectCallback;
 import com.certifyglobal.callback.JSONObjectCallbackImage;
+import com.certifyglobal.callback.JSONObjectCallbackReconnect;
 import com.certifyglobal.callback.JSONObjectCallbackSetting;
 import com.certifyglobal.pojo.FaceSettingInfo;
 import com.google.android.gms.common.util.Hex;
@@ -140,7 +142,7 @@ public class Utils {
             obj.put("code_id", code);
             obj.put("user_id", userId);
            // obj.put("CompanyId", companyId);
-            obj.put("push_token", Utils.readFromPreferences(context, PreferencesKeys.fireBasePushToken, "").isEmpty() ? FirebaseInstanceId.getInstance().getToken() : Utils.readFromPreferences(context, PreferencesKeys.fireBasePushToken, ""));
+            obj.put("push_token",FirebaseInstanceId.getInstance().getToken());
             obj.put("device_data", MobileDetailsNew(context));
             obj.put("authenitcate_hash", Utils.getHMacSecretKey(context));
             obj.put("public_key", Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
@@ -480,6 +482,21 @@ public class Utils {
             String responseTemp = Requestor.requestJson(url, req, header);
             if (responseTemp != null && !responseTemp.equals(""))
                 return new JSONObject(responseTemp);
+        } catch (Exception e) {
+
+            Logger.error(LOG + "getJSONObject(JSONObject req, String url): req = " + req
+                    + ", url = " + url, e.getMessage());
+            return null;
+
+        }
+        return null;
+    }
+
+    public static String getJSONObjectReconnect(JSONObject req, String url,String header) {
+        try {
+            String responseTemp = Requestor.requestJson(url, req, header);
+            if (responseTemp != null && !responseTemp.equals(""))
+                return new String(responseTemp);
         } catch (Exception e) {
 
             Logger.error(LOG + "getJSONObject(JSONObject req, String url): req = " + req
@@ -1380,5 +1397,20 @@ public class Utils {
             Logger.error("Util cameraPermission",e.getMessage());
         }
     }
+    public static void UpdatePublicKey(String userId, JSONObjectCallbackReconnect callback, Context context, String domainValue, String header) {
+        try {
+            Utils.saveToPreferences(context, PreferencesKeys.fireBasePushToken, FirebaseInstanceId.getInstance().getToken());
+            RSAKeypair.getRSAPublic(context);
+            JSONObject obj = new JSONObject();
+            obj.put("user_id", userId);
+            obj.put("push_token", Utils.readFromPreferences(context, PreferencesKeys.fireBasePushToken, "").isEmpty() ? FirebaseInstanceId.getInstance().getToken() : Utils.readFromPreferences(context, PreferencesKeys.fireBasePushToken, ""));
+            obj.put("device_data", MobileDetailsNew(context));
+            obj.put("authenitcate_hash", Utils.getHMacSecretKey(context));
+            obj.put("updated_public_key", Utils.readFromPreferences(context, PreferencesKeys.publicKey, ""));
+            new AsyncJSONObjectReconnect(obj, callback, ApplicationWrapper.BaseUrl(domainValue, EndPoints.UpdatePublicKey),header).execute();
 
+        } catch (Exception e) {
+            Logger.error(LOG + "QRCodeSender(String code, int userId, int companyId, JSONObjectCallback callback, Context context,String domainValue)", e.getMessage());
+        }
+    }
 }

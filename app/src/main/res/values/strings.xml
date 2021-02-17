@@ -161,4 +161,5 @@
     <string name="security_msg">We have detected some security issues with your device that require your attention.</string>
     <string name="fix_later">Fix Later</string>
     <string name="fix_now">Fix Now</string>
+    <string name="re_connect">Reconnect</string>
 </resources>

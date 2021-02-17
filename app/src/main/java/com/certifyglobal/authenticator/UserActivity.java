@@ -44,6 +44,7 @@ import com.certifyglobal.utils.SwipeHelper;
 import com.certifyglobal.utils.SwipeToDeleteCallback;
 import com.certifyglobal.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 public class UserActivity extends AppCompatActivity implements JSONObjectCallback, Communicator, PayloadObjectCallback {
+    private static final String LOG = "UserActivity";
     private String LAG = "UserActivity - ";
     private TokenPersistence mTokenPersistence;
     private static TokenAdapterRecycler mTokenAdapter;
@@ -234,6 +236,13 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
 
                 }
             });
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(!Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()))
+                        restoreAccounts();
+                }
+            });
             mTokenAdapter = new TokenAdapterRecycler(this, this, mTokenPersistence);
             receiver = new RefreshListBroadcastReceiver();
             versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -242,8 +251,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             recyclerLocation.setAdapter(mTokenAdapter);
             recyclerLocation.addItemDecoration(new DividerItemDecoration(recyclerLocation.getContext(), DividerItemDecoration.VERTICAL));
             enableSwipeToDeleteAndUndo();
-
-                    // Don't permit screenshots since these might contain OTP codes.
+            // Don't permit screenshots since these might contain OTP codes.
             mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -267,6 +275,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             Logger.error(LAG + "onCreate(Bundle savedInstanceState)", e.getMessage());
         }
     }
+
     private void openBottomDialog() {
         KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         try {
@@ -487,5 +496,68 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
     @Override
     public void onBackPressed() {
         finishAffinity();
+    }
+
+    private void restoreAccounts() {
+        int position = -1;
+        try {
+            for(int i=0;i<mTokenPersistence.length();i++) {
+                position=i;
+                Token tokenTemp = mTokenPersistence.get(i);
+                String[] labelU = tokenTemp.getLabel().split("\\|");
+                String companyName = labelU.length >= 1 ? labelU[0] : "";
+                String userName = labelU.length >= 2 ? labelU[1] : "";
+                String role = labelU.length >= 3 ? labelU[2] : "";
+                String companyID = labelU.length >= 4 ? labelU[3] : "";
+                String userID = labelU.length >= 5 ? labelU[4] : "";
+                String hostName = labelU.length >= 6 ? labelU[5] : "";
+                String activate = labelU.length >= 7 ? labelU[6] : "";
+                if(!activate.equals("false")) {
+                    String label = String.format("%s|%s|%s|0|%s|%s|%s", companyName, userName, role, userID, hostName, "true");
+                    String oldtemp = String.format("otpauth://totp/%s:%s?secret=%s&digits=6&period=30", tokenTemp.getIssuer(), label, tokenTemp.getSecret());
+                    addTokenAndFinish(oldtemp, position);
+                }
+            }
+        }catch (Exception e){
+            Logger.error("Token Adapter Recycler","user version null");
+
+        }
+    }
+
+    private void addTokenAndFinish(String temp, int pos) {
+        try {
+            Token  token = new Token(temp);
+            if (new TokenPersistence(UserActivity.this).tokenExists(token)) {
+                if (UserActivity.isUserIn) {
+                    TokenPersistence mTokenPersistence = new TokenPersistence(UserActivity.this);
+                    for (int i = 0; i < mTokenPersistence.length(); i++) {
+                        Token tokenTemp = mTokenPersistence.get(i);
+                        if (tokenTemp.getLabel().equals(token.getLabel())) {
+                            new TokenPersistence(UserActivity.this).delete(i);
+                            break;
+                        }
+                    }
+                }
+            }else{
+                TokenPersistence mTokenPersistence = new TokenPersistence(UserActivity.this);
+                for (int i = 0; i < mTokenPersistence.length(); i++) {
+                    Token tokenTemp = mTokenPersistence.get(i);
+                    String[] labelU = tokenTemp.getLabel().split("\\|");
+                    String userId = labelU.length >= 4 ? labelU[4] : "";
+
+                    String[] templabelU = token.getLabel().split("\\|");
+                    String tempuserId = templabelU.length >= 4 ? templabelU[4] : "";
+
+                    if (userId.equals(tempuserId)) {
+                        new TokenPersistence(UserActivity.this).delete(i);
+                        break;
+                    }
+                }
+            }
+
+            TokenPersistence.saveAsync(UserActivity.this, token);
+        } catch (Exception e) {
+            Logger.error(" addTokenAndFinish(String temp)", e.getMessage());
+        }
     }
 }

@@ -90,7 +90,7 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                         byte[] imageBytes = Base64.decode(objJson.getString("company_icon"), Base64.DEFAULT);
                         ApplicationWrapper.getMdbCompanyAdapter().insertCompany(domainTemp,objJson.getString("user_id"), companyName, imageBytes);
                     }
-                    String value = String.format("otpauth://totp/%s:%s|%s|%s|%s|%s|%s?secret=%s&digits=6&period=30", name.replace(" ", "%20"), companyName.replace(" ", "%20"), objJson.getString("user_name"), role.replace(" ", "%20"), companyId, objJson.getString("user_id"), domainValue, sharedKey);
+                    String value = String.format("otpauth://totp/%s:%s|%s|%s|%s|%s|%s|%s?secret=%s&digits=6&period=30", name.replace(" ", "%20"), companyName.replace(" ", "%20"), objJson.getString("user_name"), role.replace(" ", "%20"), companyId, objJson.getString("user_id"), domainValue,"false", sharedKey);
                     Logger.debug("deep result","name: "+name +" companyname: "+companyName  +"username :" +objJson.getString("user_name") +"role: " +role  +"companyid :" +companyId);
                     Logger.debug("deep comp",report.toString());
                     third = false;
@@ -188,7 +188,6 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                     }
                 }
             }else{
-
                 TokenPersistence mTokenPersistence = new TokenPersistence(this);
                 for (int i = 0; i < mTokenPersistence.length(); i++) {
                     Token tokenTemp = mTokenPersistence.get(i);
@@ -203,7 +202,6 @@ public class QRUrlScanResults extends AppCompatActivity implements JSONObjectCal
                         break;
                     }
                 }
-
             }
 
             TokenPersistence.saveAsync(QRUrlScanResults.this, token);

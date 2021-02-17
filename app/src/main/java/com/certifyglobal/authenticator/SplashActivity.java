@@ -55,7 +55,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             Intent intent = getIntent();
             if (intent.getData() != null) {
                 data = intent.getData();
@@ -119,6 +118,8 @@ public class SplashActivity extends AppCompatActivity {
                     Utils.getNumberVersion(this);
                 if (Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLock, false) && !Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.appLockpref, false)) {
                     Utils.biometricLogin(SplashActivity.this,"splash");
+                // if(Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.fireBasePushToken, "").isEmpty())
+                   //  Utils.getDeviceUUid(this);
                 }else{
                     finish();
                 }
@@ -144,6 +145,10 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 }
             }
+            Logger.debug("deep firebasetokenspalsh",Utils.readFromPreferences(SplashActivity.this, PreferencesKeys.fireBasePushToken, ""));
+            Logger.debug("deep newtoken",FirebaseInstanceId.getInstance().getToken());
+
+
             //finish();
         } catch (Exception e) {
             Logger.error(TAG + "onCreate(Bundle savedInstanceState)", e.getMessage());

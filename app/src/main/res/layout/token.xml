@@ -61,9 +61,9 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_total_view_reconnect"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
@@ -72,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin16"
                 android:ellipsize="end"
-                android:gravity="left|center"
                 android:maxLines="1"
                 android:textColor="@android:color/secondary_text_light"
                 android:textSize="12sp"
@@ -82,13 +81,12 @@
                 android:id="@+id/tv_reconnect"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:gravity="center"
                 android:text="@string/re_connect"
-                android:layout_marginLeft="@dimen/margin40"
                 android:textSize="18dp"
                 android:textColor="@color/blue"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:visibility="visible"
+                android:gravity="end"/>
+        </RelativeLayout>
         <TextView
             android:id="@+id/label_user_type"
             android:layout_width="match_parent"

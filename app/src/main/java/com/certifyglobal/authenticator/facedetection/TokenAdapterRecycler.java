@@ -146,8 +146,9 @@ public class TokenAdapterRecycler extends RecyclerView.Adapter<TokenAdapterRecyc
                         }
                     });
                       String[] labelWithU = token.getLabel().split("\\|");
-                       String reconnect= labelWithU[6];
+                      String reconnect= labelWithU[6];
                       holder.tv_reconnect.setVisibility((reconnect != null && reconnect.equals("true")? View.VISIBLE : View.GONE));
+                      holder.imageView.setVisibility((reconnect != null && reconnect.equals("false")? View.VISIBLE : View.GONE));
 
                     holder.mCode.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -188,7 +189,6 @@ public class TokenAdapterRecycler extends RecyclerView.Adapter<TokenAdapterRecyc
                                 addTokenAndFinish(oldtemp, position);
 
                                 Utils.UpdatePublicKey(labelU[4], TokenAdapterRecycler.this::onJSONObjectListenerReconnect, context, labelU[5], header);
-
 
                             }catch (Exception e){
                                 Logger.error("Token Adapter Recycler",e.getMessage());

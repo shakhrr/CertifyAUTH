@@ -189,6 +189,13 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             startService(new Intent(UserActivity.this, OnClearFromRecentService.class));
             if(Utils.readFromPreferences(this,PreferencesKeys.bottomSheet,true))
             openBottomDialog();
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(!Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()))
+                        restoreAccounts();
+                }
+            });
             llNotifications.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -234,13 +241,6 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
                         Logger.error(LAG + "imageMenu - setOnClickListener", e.getMessage());
                     }
 
-                }
-            });
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(!Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()))
-                        restoreAccounts();
                 }
             });
             mTokenAdapter = new TokenAdapterRecycler(this, this, mTokenPersistence);

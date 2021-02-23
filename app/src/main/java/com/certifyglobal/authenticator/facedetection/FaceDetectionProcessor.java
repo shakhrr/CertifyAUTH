@@ -68,7 +68,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     private boolean faceLiveliness;
     private FocusViewCircle focusViewCircle;
     private FaceHandler faceHandler = new FaceHandler();
-    private Face[] iFacesImage;
+    private Face[] iFacesImage=null;
     private Context context;
     private static final int quality = -1;
     private static final int sharpness = 0;
@@ -132,7 +132,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         // if (focusViewCircle.getVisibility() == View.VISIBLE) {
         ByteArrayOutputStream blob = new ByteArrayOutputStream();
         image.getBitmap().compress(Bitmap.CompressFormat.JPEG, 30, blob); //getBitmapForDebugging()
-        iFacesImage = faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
+        iFacesImage=faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
         //  faceHandler.detectFacesAtPositions(blob.toByteArray(),5)
         int i;
         if (iFacesImage != null && iFacesImage.length > 0) {

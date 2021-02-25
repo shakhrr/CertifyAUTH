@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.certifyglobal.authenticator.ApplicationWrapper;
 import com.certifyglobal.authenticator.GraphicOverlay;
 import com.certifyglobal.authenticator.R;
+import com.certifyglobal.authenticator.UserActivity;
 import com.certifyglobal.authenticator.barcodescanning.VisionProcessorBase;
 import com.certifyglobal.callback.CommunicatorImage;
 import com.certifyglobal.pojo.FaceSettingInfo;
@@ -23,6 +24,7 @@ import com.certifyglobal.utils.Logger;
 import com.certifyglobal.utils.PreferencesKeys;
 import com.certifyglobal.utils.Utils;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
@@ -32,6 +34,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 import com.innovatrics.iface.Face;
 import com.innovatrics.iface.FaceHandler;
 import com.innovatrics.iface.TemplateInfo;
+import com.microsoft.appcenter.utils.HandlerUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -68,7 +71,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
     private boolean faceLiveliness;
     private FocusViewCircle focusViewCircle;
     private FaceHandler faceHandler = new FaceHandler();
-    private Face[] iFacesImage=null;
+    private Face[] iFacesImage;
     private Context context;
     private static final int quality = -1;
     private static final int sharpness = 0;
@@ -132,7 +135,12 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         // if (focusViewCircle.getVisibility() == View.VISIBLE) {
         ByteArrayOutputStream blob = new ByteArrayOutputStream();
         image.getBitmap().compress(Bitmap.CompressFormat.JPEG, 30, blob); //getBitmapForDebugging()
-        iFacesImage=faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
+        HandlerUtils.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                iFacesImage=faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
+            }
+        });
         //  faceHandler.detectFacesAtPositions(blob.toByteArray(),5)
         int i;
         if (iFacesImage != null && iFacesImage.length > 0) {

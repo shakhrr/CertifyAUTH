@@ -192,7 +192,7 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(!Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()))
+                    if(Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()));
                         restoreAccounts();
                 }
             });

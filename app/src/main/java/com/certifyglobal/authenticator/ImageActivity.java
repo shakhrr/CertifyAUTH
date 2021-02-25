@@ -96,8 +96,6 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
                                 HashMap<String, byte[]> multipleFaces = null;
                                 multipleFaces = ApplicationWrapper.getDBIFaceAdapter().readIFaceData("");
 
-
-
                                 if (multipleFaces.size() == 0) {
                                     sendReq(byteArrayImage.toByteArray());
                                 } else {
@@ -139,15 +137,12 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
                                                 else {
                                                     isSameFace = pushNotificationValidation;
                                                     Utils.PushAuthenticationStatus(pushType, pushNotificationValidation, ImageActivity.this, requestId, userId, ImageActivity.this, 0, isSameFace, correlationId);
-
                                                 }
-
                                             }
                                         }
                                     } catch (Exception e) {
                                         Logger.error(TAG, e.getMessage());
                                     }
-
                                     if (EndPoints.deployment == EndPoints.Mode.Local)
                                         Logger.debug("Image Size", byteArrayImage.size() + " matchingConfidence " + matchingConfidence);
                                 }

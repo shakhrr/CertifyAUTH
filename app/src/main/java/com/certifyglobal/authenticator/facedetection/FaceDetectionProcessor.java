@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.certifyglobal.authenticator.ApplicationWrapper;
 import com.certifyglobal.authenticator.GraphicOverlay;
@@ -135,12 +136,7 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
         // if (focusViewCircle.getVisibility() == View.VISIBLE) {
         ByteArrayOutputStream blob = new ByteArrayOutputStream();
         image.getBitmap().compress(Bitmap.CompressFormat.JPEG, 30, blob); //getBitmapForDebugging()
-        HandlerUtils.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                iFacesImage=faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
-            }
-        });
+        iFacesImage=faceHandler.detectFaces(blob.toByteArray(), 25, 200, 1);
         //  faceHandler.detectFacesAtPositions(blob.toByteArray(),5)
         int i;
         if (iFacesImage != null && iFacesImage.length > 0) {
@@ -149,54 +145,22 @@ public class FaceDetectionProcessor extends VisionProcessorBase<List<FirebaseVis
                 boolean imageValidations;
                 float[] attribute = Utils.getFaceAttribute(iFacesImage[0]);
                 TemplateInfo tem = faceHandler.getTemplateInfo(iFacesImage[0].createTemplate());
-                imageValidations = tem.getQuality() > 44;
+                    imageValidations = tem.getQuality() > 44;
+                Logger.debug("deepimage enroll",""+tem.getQuality());
                 // validation face setting
                 for (int f = 0; f < face_setting_arraylist.size(); f++) {
                     if (imageValidations) {
-                        //  i = errorPosition = faceSettingInfoArrayList.get(f).position;
                         i = errorPosition = f;
                         errorMsg = face_setting_arraylist.get(f).get("name");
+                       imageValidations = Float.parseFloat(face_setting_arraylist.get(f).get("min")) < attribute[f] && attribute[f] < Float.parseFloat(face_setting_arraylist.get(f).get("max")); // -5000 to -5000
 
-                        //    Logger.debug("141414141414141414", "333333333333333333" + attribute[i]);
-
-                        //  imageValidations = faceSettingInfoArrayList.get(f).min < attribute[i] && attribute[i] < faceSettingInfoArrayList.get(f).max; // -5000 to -5000
-                        imageValidations = Float.parseFloat(face_setting_arraylist.get(f).get("min")) < attribute[f] && attribute[f] < Float.parseFloat(face_setting_arraylist.get(f).get("max")); // -5000 to -5000
-//                    switch (i) {
-//                        case sharpness:
-//                        case brightness:
-//                        case contrast:
-//                        case roll:
-//                        case yam:
-//                        case pitch:
-//                            imageValidations = faceSettingInfoArrayList.get(f).min < attribute[i] && attribute[i] < faceSettingInfoArrayList.get(f).max; // -5000 to -5000
-//                            break;
-//                        case confidence:
-//                            imageValidations = attribute[i] > faceSettingInfoArrayList.get(f).min;  // >600
-//                            break;
-//                        case glassStatus:
-//                            imageValidations = attribute[i] < faceSettingInfoArrayList.get(f).min;
-//                            break;
-//                        case eyeDistance:
-//                            imageValidations = faceSettingInfoArrayList.get(f).min < attribute[i] && attribute[i] < faceSettingInfoArrayList.get(f).max;
-//                            break;
-//                        case faceVerificationConfidence:
-//                            imageValidations = faceSettingInfoArrayList.get(f).min < attribute[i] && attribute[i] < faceSettingInfoArrayList.get(f).max;
-//                            break;
-
-//
-                        //                }
                     }
                 }
 
                 if (imageValidations) {
                     imageBitmap = image.getBitmap();
                     errorMessageText("");
-                    //   startCountDownTimer();
-                } /*else if (errorPosition == -1) {
-                    //SetErrorMessage(tem.getQuality());
-                    SetErrorMessagenew(-1,errorMsg);
-                }*/ else {
-                    //  SetErrorMessage((int) attribute[errorPosition]);
+                } else {
                     SetErrorMessagenew(tem.getQuality(), errorMsg);
                 }
             } else {

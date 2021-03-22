@@ -189,10 +189,11 @@ public class UserActivity extends AppCompatActivity implements JSONObjectCallbac
             startService(new Intent(UserActivity.this, OnClearFromRecentService.class));
             if(Utils.readFromPreferences(this,PreferencesKeys.bottomSheet,true))
             openBottomDialog();
+            String value=Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"");
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(Utils.readFromPreferences(UserActivity.this, PreferencesKeys.fireBasePushToken,"").equals(FirebaseInstanceId.getInstance().getToken()));
+                    if(!value.equalsIgnoreCase(FirebaseInstanceId.getInstance().getToken()));
                         restoreAccounts();
                 }
             });

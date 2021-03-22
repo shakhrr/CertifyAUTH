@@ -96,6 +96,8 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
                                 HashMap<String, byte[]> multipleFaces = null;
                                 multipleFaces = ApplicationWrapper.getDBIFaceAdapter().readIFaceData("");
 
+
+
                                 if (multipleFaces.size() == 0) {
                                     sendReq(byteArrayImage.toByteArray());
                                 } else {
@@ -137,12 +139,15 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
                                                 else {
                                                     isSameFace = pushNotificationValidation;
                                                     Utils.PushAuthenticationStatus(pushType, pushNotificationValidation, ImageActivity.this, requestId, userId, ImageActivity.this, 0, isSameFace, correlationId);
+
                                                 }
+
                                             }
                                         }
                                     } catch (Exception e) {
                                         Logger.error(TAG, e.getMessage());
                                     }
+
                                     if (EndPoints.deployment == EndPoints.Mode.Local)
                                         Logger.debug("Image Size", byteArrayImage.size() + " matchingConfidence " + matchingConfidence);
                                 }
@@ -166,7 +171,9 @@ public class ImageActivity extends AppCompatActivity implements JSONObjectCallba
         oldBitmap.compress(Bitmap.CompressFormat.JPEG, 30, oldByteArrayImage);
         Face[] oldFaces = faceHandler.detectFaces(oldByteArrayImage.toByteArray(), 30, 200, 1);
         matchingConfidence = faceHandler.matchTemplate(facesByteTemplate, oldFaces[0].createTemplate());
-        pushNotificationValidation = matchingConfidence > 100;
+        pushNotificationValidation = matchingConfidence > 94;
+        Logger.debug("deepimageconfidence",""+matchingConfidence);
+
     }
 
     public void sendReq(byte[] byteArray) {

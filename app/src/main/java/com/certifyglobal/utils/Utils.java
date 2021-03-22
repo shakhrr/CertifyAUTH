@@ -926,6 +926,10 @@ public class Utils {
          //   attributeValues[20] = iFacesImage.getAttribute(FaceAttributeId.RED_EYE_L);
             attributeValues[16] = iFacesImage.getAttribute(FaceAttributeId.FACE_VERIFICATION_CONFIDENCE);
 
+          /*  for (int i=0;i<attributeValues.length;i++) {
+                Logger.debug("deepattributes", ""+attributeValues[i]);
+            }
+*/
         } catch (Exception e) {
             Logger.error(LOG + "getFaceAttribute()", e.toString());
         }
